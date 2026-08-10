@@ -1,0 +1,75 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Compiled output
+dist/
+build/
+out/
+coverage/
+*.tsbuildinfo
+
+# Frontend build output
+.next/
+.nuxt/
+.angular/
+.vue/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.sublime-workspace
+*.launch
+.project
+.classpath
+.settings/
+.c9/
+
+# dotenv environment variable files
+.env
+.env.*
+!.env.example
+
+# Prisma generated client
+generated/
+**/generated/prisma
+
+# AI agent tooling (installed skill docs & locks)
+.agents
+.claude
+.windsurf
+skills-lock.json
+
+# temp directory
+.temp/
+.tmp/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Cache
+.cache/
+.cache-loader/
