@@ -1,7 +1,7 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
@@ -65,15 +65,18 @@ export class AuthService {
         passwordHash: true,
       },
     });
+    const unauthorized = new UnauthorizedException(
+      'Email or password is incorrect',
+    );
     if (!user) {
-      throw new BadRequestException('Email or Password is wrong!');
+      throw unauthorized;
     }
     const isPasswordValid = await bcrypt.compare(
       dto.password,
       user.passwordHash,
     );
     if (!isPasswordValid) {
-      throw new BadRequestException('Email or Password is wrong!');
+      throw unauthorized;
     }
 
     return {
@@ -83,5 +86,22 @@ export class AuthService {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
+  }
+
+  async me(userId: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    if (!user) {
+      throw new UnauthorizedException('User no longer exists');
+    }
+    return user;
   }
 }
