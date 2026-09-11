@@ -73,3 +73,6 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # Cache
 .cache/
 .cache-loader/
+
+# Local planning docs (not committed)
+context/
