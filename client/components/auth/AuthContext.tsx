@@ -48,12 +48,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })();
     return () => { mounted = false; };
   }, []);
-    void (async () => {
-      const me = await authService.me();
-      setUser(me);
-      setLoading(false);
-    })();
-  }, []);
 
   return <AuthContext.Provider value={{ user, loading, refresh, logout }}>{children}</AuthContext.Provider>;
 }
