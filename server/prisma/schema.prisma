@@ -1,0 +1,35 @@
+enum Role {
+  buyer
+  seller
+  admin
+}
+
+enum SellerStatus {
+  pending
+  approved
+  rejected
+}
+
+model User {
+  id           String       @id @default(uuid())
+  email        String       @unique
+  fullName     String?
+  passwordHash String?
+  googleId     String?      @unique
+  githubId     String?      @unique
+  role         Role         @default(buyer)
+  sellerStatus SellerStatus?
+  avatarUrl    String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+generator client {          // "which SDK to build from this schema, and where to put it"
+  provider = "prisma-client" // think: codegen, like graphql-codegen producing typed hooks
+  output   = "../generated/prisma"
+}
+
+
+datasource db {
+  provider = "postgresql"   // the dialect — like choosing fetch vs axios, but for SQL flavors
+}

@@ -1,0 +1,250 @@
+@import "tailwindcss";
+
+@theme {
+  /* Font — applied via next/font/google Inter in app/layout.tsx */
+  --font-sans: var(--font-inter), "Inter", sans-serif;
+  --font-material-symbols: "Material Symbols Outlined", sans-serif;
+
+  /* Page and surface backgrounds */
+  --color-background: #f6f7fb;
+  --color-surface: #ffffff;
+  --color-surface-secondary: #f9fafb;
+  --color-surface-tertiary: #f2f5f7;
+  --color-surface-muted: #f4f5fb;
+
+  /* Borders */
+  --color-border: #e7eaf3;
+  --color-border-light: #e5e7eb;
+  --color-border-muted: #dfe1e7;
+
+  /* Text */
+  --color-text-primary: #101828;
+  --color-text-secondary: #6a7282;
+  --color-text-muted: #99a1af;
+  --color-text-dark: #364153;
+  --color-text-darker: #36394a;
+  --color-text-darkest: #111827;
+  --color-text-black: #131316;
+  --color-text-slate: #272835;
+  --color-text-slate-medium: #666d80;
+
+  /* Primary accent — purple */
+  --color-accent: #7c5cfc;
+  --color-accent-dark: #5e4cff;
+  --color-accent-deep: #4a2ec5; /* logo gradient stop */
+  --color-accent-light: #f3e8ff;
+  --color-accent-muted: #faf5ff;
+  --color-accent-foreground: #ffffff;
+
+  /* Success — green */
+  --color-success: #10b981;
+  --color-success-alt: #00bc7d;
+  --color-success-dark: #007a55;
+  --color-success-darker: #009966;
+  --color-success-light: #d0fae5;
+  --color-success-lightest: #ecfdf5;
+  --color-success-foreground: #007a55;
+
+  /* Info — blue */
+  --color-info: #61a8ff;
+  --color-info-dark: #155dfc;
+  --color-info-medium: #2b7fff;
+  --color-info-light: #dbeafe;
+  --color-info-lightest: #eff6ff;
+  --color-info-foreground: #155dfc;
+  --color-info-muted: #94a2c5;
+
+  /* Warning — orange */
+  --color-warning: #ff8904;
+  --color-warning-foreground: #ffffff;
+
+  /* Error — red */
+  --color-error: #ef4444;
+  --color-error-foreground: #ffffff;
+
+  /* LinkedIn brand */
+  --color-linkedin: #0a66c2;
+  --color-linkedin-light: #dce6f1;
+  --color-linkedin-foreground: #ffffff;
+
+  /* Dark overlays */
+  --color-overlay: #111827;
+  --color-overlay-dark: #131316;
+
+  /* Aura Material Design3 surface tokens */
+  --color-on-primary: #ffffff;
+  --color-on-background: #141b2c;
+  --color-surface-container: #e9edff;
+  --color-surface-container-highest: #dbe2f9;
+  --color-primary-fixed: #e6deff;
+  --color-outline: #797587;
+  --color-on-secondary: #ffffff;
+  --color-error: #ba1a1a;
+  --color-tertiary-fixed: #ffdcc3;
+  --color-primary-fixed-dim: #cabeff;
+  --color-inverse-surface: #293041;
+  --color-secondary-container: #62a8ff;
+  --color-outline-variant: #c9c4d8;
+  --color-on-tertiary-container: #fffbff;
+  --color-on-surface: #141b2c;
+  --color-surface-variant: #dbe2f9;
+  --color-secondary-fixed: #d4e3ff;
+  --color-on-primary-container: #fffbff;
+  --color-surface: #f9f9ff;
+  --color-secondary-fixed-dim: #a4c9ff;
+  --color-tertiary-fixed-dim: #ffb77d;
+  --color-on-error: #ffffff;
+  --color-surface-container-high: #e0e8ff;
+  --color-on-error-container: #93000a;
+  --color-on-tertiary-fixed-variant: #6e3900;
+  --color-background: #f9f9ff;
+  --color-inverse-primary: #cabeff;
+  --color-primary-container: #7857f8;
+  --color-on-secondary-fixed-variant: #004883;
+  --color-error-container: #ffdad6;
+  --color-surface-dim: #d2daf0;
+  --color-tertiary-container: #b15f00;
+  --color-on-surface-variant: #484555;
+  --color-on-primary-fixed-variant: #4918c8;
+  --color-on-secondary-fixed: #001c39;
+  --color-surface-tint: #613de0;
+  --color-primary: #5f3add;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary: #8d4b00;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-tertiary-fixed: #2f1500;
+  --color-on-tertiary-fixed-variant: #6e3900;
+  --color-on-secondary-container: #003c70;
+  --color-surface-container-low: #f1f3ff;
+  --color-secondary: #0060ac;
+  --color-inverse-on-surface: #edf0ff;
+  --color-surface-bright: #f9f9ff;
+  --color-on-primary-fixed: #1c0062;
+
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-card: 0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+@utility bg-logo-gradient {
+  background: linear-gradient(45deg, var(--color-accent) 0%, var(--color-accent-deep) 100%);
+}
+
+@keyframes route-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-route-enter {
+  animation: route-enter 250ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-route-enter {
+    animation: none;
+  }
+}
+
+@utility font-material-symbols {
+  font-family: var(--font-material-symbols);
+}
+
+.material-symbols-outlined {
+  font-family: var(--font-material-symbols);
+}
+
+@utility text-display-lg {
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 44px;
+  letter-spacing: -0.02em;
+}
+
+@utility text-display-lg-mobile {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 36px;
+  letter-spacing: -0.01em;
+}
+
+@utility text-headline-lg {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: -0.02em;
+}
+
+@utility text-headline-lg-mobile {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  letter-spacing: -0.01em;
+}
+
+@utility text-headline-md {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+  letter-spacing: -0.01em;
+}
+
+@utility text-headline-sm {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+@utility text-body-lg {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+@utility text-body-md {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+@utility text-body-sm {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+@utility text-caption {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.01em;
+}
+
+@utility text-label-md {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+@utility text-label-sm {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+}
