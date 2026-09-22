@@ -39,7 +39,6 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState<"buyer" | "seller">("buyer");
-  const [keepSignedIn, setKeepSignedIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -157,18 +156,6 @@ export default function RegisterPage() {
               Sellers require admin approval before listing products.
             </p>
           </div>
-        )}
-
-        {mode === "register" && (
-          <label className="flex items-center gap-2.5 cursor-pointer select-none pt-1">
-            <input
-              type="checkbox"
-              checked={keepSignedIn}
-              onChange={(e) => setKeepSignedIn(e.target.checked)}
-              className="w-4 h-4 rounded text-primary focus:ring-0 cursor-pointer accent-primary"
-            />
-            <span className="text-body-sm text-on-surface-variant">Keep me signed in on this device</span>
-          </label>
         )}
 
         <Button
