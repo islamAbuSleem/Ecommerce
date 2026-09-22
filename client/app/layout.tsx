@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { Providers } from "@/components/auth/Providers";
 import "./globals.css";
 
 const inter = Inter({
@@ -29,6 +30,7 @@ const FONT_LINKS = [
   {
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap",
+    precedence: "default",
   },
 ] as const;
 
@@ -39,9 +41,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link key={link.href} {...link} />
       ))}
       <body className="min-h-full flex flex-col bg-background font-sans text-text-primary">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <Providers>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

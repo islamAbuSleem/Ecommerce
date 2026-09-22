@@ -6,20 +6,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { AuthShell, type AuthMode } from "@/components/auth/AuthShell";
+import { useAuth } from "@/components/auth/AuthContext";
+import { authService } from "@/services/auth.service";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
-
-type LoginResponse = {
-  success: boolean;
-  data?: {
-    id: string;
-    email: string;
-    fullName: string | null;
-    role: string;
-    sellerStatus: string | null;
-  };
-  error?: string;
-};
 
 const BRAND = {
   headline: "Connecting discerning patrons with master makers and authenticated heritage studios worldwide.",
@@ -42,6 +32,7 @@ const TITLES = {
 
 export default function LoginPage() {
   const router = useRouter();
+  const { refresh } = useAuth();
   const [mode, setMode] = useState<AuthMode>("login");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -57,23 +48,22 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-        credentials: "include",
-      });
-
-      const data = (await res.json()) as LoginResponse;
-      if (!res.ok || !data.success) {
-        setError(data.error ?? "Login failed");
-        return;
+      if (mode === "register") {
+        await authService.register({
+          fullName,
+          email,
+          password,
+          role: isVendor ? "seller" : "buyer",
+        });
+      } else {
+        await authService.login(email, password);
       }
 
+      await refresh();
       router.push("/");
       router.refresh();
-    } catch {
-      setError("Something went wrong. Try again.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Try again.");
     } finally {
       setLoading(false);
     }
@@ -110,6 +100,7 @@ export default function LoginPage() {
             onChange={(e) => setFullName(e.target.value)}
             icon="badge"
             iconPosition="right"
+            required
           />
         )}
 
@@ -142,6 +133,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              minLength={8}
               className="w-full h-11 px-3.5 pr-10 rounded-lg bg-surface-container-low text-on-surface text-body-md placeholder:text-outline outline-none focus:bg-surface-container transition-all"
             />
             <button

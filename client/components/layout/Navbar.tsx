@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/components/auth/AuthContext";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -13,6 +14,7 @@ const navItems = [
 
 export function Navbar() {
   const pathname = usePathname();
+  const { user, loading, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-surface">
@@ -37,6 +39,27 @@ export function Navbar() {
               </Link>
             );
           })}
+          {user ? (
+            <span className="flex items-center gap-3">
+              <span className="text-sm font-medium text-text-dark">{user.fullName || user.email}</span>
+              <button
+                type="button"
+                onClick={() => void logout()}
+                className="text-sm font-medium text-text-dark hover:text-text-primary transition-colors"
+              >
+                Logout
+              </button>
+            </span>
+          ) : (
+            !loading && (
+              <Link
+                href="/login"
+                className="text-sm font-medium text-text-dark hover:text-text-primary transition-colors"
+              >
+                Sign in
+              </Link>
+            )
+          )}
         </nav>
       </div>
     </header>

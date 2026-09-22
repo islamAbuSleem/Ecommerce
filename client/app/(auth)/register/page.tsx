@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { AuthShell, type AuthMode } from "@/components/auth/AuthShell";
+import { useAuth } from "@/components/auth/AuthContext";
+import { authService } from "@/services/auth.service";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
 
@@ -30,6 +32,7 @@ const TITLES = {
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { refresh } = useAuth();
   const [mode, setMode] = useState<AuthMode>("register");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -46,27 +49,17 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName, email, password, role }),
-        credentials: "include",
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        const errorData = data as { message?: string | string[] };
-        const message = Array.isArray(errorData?.message)
-          ? errorData.message.join(", ")
-          : errorData?.message ?? "Registration failed";
-        setError(message);
-        return;
+      if (mode === "login") {
+        await authService.login(email, password);
+      } else {
+        await authService.register({ fullName, email, password, role });
       }
 
+      await refresh();
       router.push("/");
       router.refresh();
-    } catch {
-      setError("Something went wrong. Try again.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Try again.");
     } finally {
       setLoading(false);
     }

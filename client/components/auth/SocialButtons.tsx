@@ -10,7 +10,8 @@ const PROVIDERS = [
 export function SocialButtons({ apiUrl }: { apiUrl: string }) {
   return (
     <div className="flex flex-col gap-3 mb-6">
-      {PROVIDERS.map(({ id, label, Icon }) => (
+      {/* Apple is hidden: backend has no /auth/apple route. */}
+      {PROVIDERS.filter(({ id }) => id !== "apple").map(({ id, label, Icon }) => (
         <SocialButton
           key={id}
           onClick={() => {

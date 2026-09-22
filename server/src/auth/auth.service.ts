@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
@@ -6,7 +6,6 @@ import type { Role, SellerStatus } from '../../generated/prisma/client';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { AuthenticatedUser } from '../common/interfaces/authenticated-user.interface';
 import { authCookie } from '../common/config/auth-cookie.config';
 
 @Injectable()
@@ -18,6 +17,10 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
+    const existing = await this.prisma.user.findUnique({ where: { email: dto.email } });
+    if (existing) {
+      throw new ConflictException('Email already registered');
+    }
     const hashed = await bcrypt.hash(dto.password, 10);
     const user = await this.prisma.user.create({
       data: {
@@ -28,7 +31,7 @@ export class AuthService {
       },
       select: { id: true, email: true, fullName: true, role: true, sellerStatus: true },
     });
-    return user;
+    return this.issueToken(user);
   }
 
   async login(dto: LoginDto) {
@@ -60,8 +63,7 @@ export class AuthService {
   }
 
   private async issueToken(user: { id: string; email: string; fullName: string | null; role: Role; sellerStatus: SellerStatus | null }) {
-    const payload: AuthenticatedUser = { userId: user.id, email: user.email };
-    const token = await this.jwtService.signAsync(payload);
+    const token = await this.jwtService.signAsync({ sub: user.id, email: user.email });
 
     return {
       token,

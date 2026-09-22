@@ -17,8 +17,10 @@ export class AuthController {
 
   @Public()
   @Post('register')
-  async register(@Body() dto: RegisterDto) {
-    return this.authService.register(dto);
+  async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
+    const result = await this.authService.register(dto);
+    res.cookie('token', result.token, result.cookie);
+    return { success: true, data: result.user };
   }
 
   @Public()
@@ -31,15 +33,20 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  getProfile(@CurrentUser() user: AuthenticatedUser) {
-    return this.authService.me(user.userId);
+  async getProfile(@CurrentUser() user: AuthenticatedUser) {
+    return { success: true, data: await this.authService.me(user.userId) };
   }
 
   @Public()
   @Get('logout')
   @HttpCode(HttpStatus.OK)
   logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('token');
+    res.clearCookie('token', {
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+    });
     return { success: true };
   }
 
