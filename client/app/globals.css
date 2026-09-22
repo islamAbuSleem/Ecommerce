@@ -141,6 +141,27 @@ body {
   background: linear-gradient(45deg, var(--color-accent) 0%, var(--color-accent-deep) 100%);
 }
 
+@keyframes route-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-route-enter {
+  animation: route-enter 250ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-route-enter {
+    animation: none;
+  }
+}
+
 @utility font-material-symbols {
   font-family: var(--font-material-symbols);
 }

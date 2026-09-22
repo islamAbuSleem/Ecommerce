@@ -63,7 +63,7 @@ function BrandPanel({ brand }: { brand: BrandCopy }) {
   return (
     <>
       <div className="relative z-10 flex flex-col gap-8">
-        <div className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3 w-fit">
           <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary text-on-primary shadow-sm">
             <span className="material-symbols-outlined text-xl">token</span>
           </span>
@@ -71,7 +71,7 @@ function BrandPanel({ brand }: { brand: BrandCopy }) {
             <span className="text-headline-sm text-on-surface tracking-tight">Aura Commerce</span>
             <span className="text-caption text-on-surface-variant uppercase tracking-wider">Provenance Protocol</span>
           </div>
-        </div>
+        </Link>
         <div className="flex flex-col gap-4 mt-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container text-primary w-fit">
             <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
@@ -185,7 +185,7 @@ export function AuthShell({ mode, onModeChange, brand, titles, helper, apiUrl, c
   const copy = titles[mode];
 
   return (
-    <div className="flex min-h-[calc(100vh-64px)] items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center">
       <AuthCard layout="split" brandPanel={<BrandPanel brand={brand} />}>
         <div className="flex flex-col gap-2 mb-6">
           <div className="flex items-center justify-between">

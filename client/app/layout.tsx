@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import { Providers } from "@/components/auth/Providers";
+import { RouteTransition } from "@/components/ui/RouteTransition";
 import "./globals.css";
 
 const inter = Inter({
@@ -42,9 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       ))}
       <body className="min-h-full flex flex-col bg-background font-sans text-text-primary">
         <Providers>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <RouteTransition>{children}</RouteTransition>
         </Providers>
       </body>
     </html>
