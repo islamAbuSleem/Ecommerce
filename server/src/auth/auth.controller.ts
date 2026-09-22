@@ -81,6 +81,6 @@ export class AuthController {
     const user = req.user;
     const result = await this.authService.authenticateOAuth(user.userId, user.email);
     res.cookie('token', result.token, result.cookie);
-    return res.redirect(process.env.CLIENT_URL ?? 'http://localhost:3001');
+    return res.redirect(process.env.CLIENT_URL ?? 'http://localhost:3000');
   }
 }
