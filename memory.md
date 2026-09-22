@@ -1,50 +1,46 @@
-# Memory — BE Auth Module Scaffold + Prisma Setup
+# Memory — Auth Screens Redesigned to Match Design Spec
 
-Last updated: 2026-09-11 (evening session)
+Last updated: 2026-09-22
 
 ## What was built
 
-- `server/` — fresh NestJS v11 scaffold with auth deps installed (@nestjs/config, @nestjs/jwt, @nestjs/passport, @nestjs/swagger@11, Prisma v7, @prisma/adapter-pg, pg, bcrypt, class-validator/-transformer, cookie-parser, passport + passport-jwt/-google-oauth20/-github2)
-- `server/prisma/schema.prisma` — `User` model (uuid id, unique email, nullable passwordHash/googleId/githubId, Role enum buyer/seller/admin default buyer, optional SellerStatus pending/approved/rejected, avatarUrl, timestamps) + generator/datasource blocks; initial migration applied to Neon Postgres
-- `server/src/prisma/prisma.service.ts` + `prisma.module.ts` skeletons (user-written, import error under investigation — see below)
-- `client/` — fresh Next.js scaffold (user-created, untouched since)
-- `store-api/` deleted; `AGENTS.md` created at repo root; `context/` planning docs written (project-overview, architecture, build-plan, progress-tracker, code-standards, library-docs, ui-registry, ui-rules, ui-tokens, command-log); `context/` added to root `.gitignore`
-- Committed as 96e6388 on branch `feature/auth-module` (not pushed). `server/.env` holds the real Neon DATABASE_URL and is gitignored — verify never staged.
+- Auth screens redesigned to match `client/design/sign_in_register/` and `sign_in_register_desktop/` HTML designs
+- `client/app/(auth)/login/page.tsx` — full responsive rewrite (mobile + desktop split layout)
+- `client/app/(auth)/register/page.tsx` — full responsive rewrite (mobile + desktop split layout)
+- `client/components/ui/AuthCard.tsx` — complete rewrite with `default` (mobile) and `split` (desktop) layouts
+- `client/components/ui/Input.tsx` — added `icon` + `iconPosition` props, updated focus ring
+- `client/components/ui/Button.tsx` — added `icon` prop, new `SocialButton` component
+- `client/app/globals.css` — added 33 Aura Material Design 3 surface tokens + 10 typography utilities
+- `client/app/layout.tsx` — added Material Symbols Outlined font via `<link>` tag
+- `client/design/` added to `.gitignore`
 
 ## Decisions made
 
-- No external backend: NestJS `server/` is the sole backend and sole JWT issuer (InsForge references in context docs are stale, need update)
-- Flat repo layout: `server/` + `client/` side by side (architecture.md still shows old `apps/` + Turborepo layout — needs update)
-- Auth pattern: NestJS Passport (local + Google + GitHub strategies), HTTP-only cookie JWT, global JwtAuthGuard with `@Public()`, `@CurrentUser()`, role from JWT + `seller_status` always checked fresh from DB
-- Single `users` table, one account per email across all strategies; seller registration sets `seller_status=pending`
-- CORS with credentials between client and server (separate domains)
-- Prisma v7 pinned (v8 RC rejected); `@nestjs/swagger` pinned to v11 (v12 needs Nest 12)
-- Password reset + refresh-token rotation explicitly deferred to post-MVP (logged in progress-tracker.md Notes)
-- Pairing mode: user builds, assistant guides with explanations (user is FE dev learning BE — explain every BE concept in FE terms)
-- Branch-per-feature, never main; never commit/push without explicit user approval
+- Responsive approach: mobile uses centered `max-w-md` card, desktop uses `lg:grid-cols-12` split layout with brand panel left + form right
+- Material Symbols Outlined loaded via CDN `<link>` in layout (not next/font/google due to Next.js 16 font import limitations)
+- Design tokens use CSS custom properties in `@theme` block, no raw hex in components
+- Tab switching between Sign In / Create Account on mobile reveals/hides name field, vendor checkbox, and changes submit text
+- Desktop shows all form fields always visible, with Apple social login and "Forgot password?" link
 
 ## Problems solved
 
-- swagger v12 vs Nest 11 peer conflict → pinned `@nestjs/swagger@^11.0.0`
-- Prisma 8 RC installed by default, `--datasource-provider` flag gone → pinned `prisma@7`, `@prisma/client@7`, `@prisma/adapter-pg@7`, plain `prisma init`
-- `prisma7.config.ts` not picked up by migration engine → renamed to default `prisma.config.ts`
-- P1001 Neon unreachable → idle-compute cold start; fix was waking the project in Neon dashboard + retry (URL already direct/unpooled, correct for migrate)
-- `prisma generate` "no generators defined" → the User-model snippet had replaced the whole schema file; re-prepended `generator client` + `datasource db` blocks
-- Nested `server/.git` from `nest new` removed so server/ is tracked by the main repo
+- Material Symbols Outlined icons showing as colored text instead of glyphs — fixed by loading font via `<link rel="stylesheet">` in layout.tsx and adding minimal `.material-symbols-outlined` class in globals.css
+- Next.js 16 `next/font/google` doesn't support Material Symbols Outlined font family — workaround using direct CDN link
+- Icons now render correctly on both mobile and desktop breakpoints
 
 ## Current state
 
-- Migration `20260911204004_init` applied; Prisma client generated to `server/generated/` (gitignored)
-- `prisma.service.ts` reports TS2307 cannot find `../../generated/prisma/client` — generate succeeded after the error appeared, so likely just needs a TS server restart; unverified
-- `server/src/auth/` holds three empty placeholder files (controller/module/service)
-- Todos: scaffold ✅, PrismaService/PrismaModule in progress; auth-core, auth, CORS/wiring, Swagger/tests, doc updates pending
+- Auth pages at `/login` and `/register` fully match design files
+- Build succeeds (`npx next build` — 7/7 routes)
+- Dev server running at `http://localhost:3000`
+- All design tokens in globals.css, responsive layouts working
+- Icons rendering correctly (verified in screenshots)
 
 ## Next session starts with
 
-1. Confirm TS2307 is gone after TS server restart (or paste the exact import line)
-2. Review `prisma.service.ts` + `prisma.module.ts`, wire `PrismaModule` into `AppModule`
-3. Build `auth-core/` (JWT module, JwtStrategy, JwtAuthGuard global, `@Public()`, `@CurrentUser()`, roles guard)
+1. Continue building remaining screens from `client/design/` (marketplace_home, product_listing, product_detail, cart_checkout, seller_dashboard, admin_dashboard, user_profile_orders, vendor_application_review, add_edit_product)
+2. Or test auth flow end-to-end with backend
 
 ## Open questions
 
-- None blocking. Stale docs to fix later: architecture.md layout diagram, AGENTS.md/context InsForge-backend references.
+- None — auth screens complete and matching design spec

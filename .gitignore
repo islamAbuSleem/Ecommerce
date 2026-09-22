@@ -76,3 +76,6 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # Local planning docs (not committed)
 context/
+
+# Design assets
+client/design/
