@@ -22,10 +22,10 @@ export class GitHubStrategy extends PassportStrategy(Strategy, 'github') {
     profile: any,
     done: VerifyCallback,
   ) {
-    const email =
-      profile.emails?.[0]?.value ??
-      profile.username ??
-      profile.id;
+    const email = profile.emails?.[0]?.value;
+    if (!email) {
+      return done(new Error('No email returned from GitHub'), false);
+    }
 
     const user = await this.authService.findOrCreateGithubUser({
       githubId: profile.id,
