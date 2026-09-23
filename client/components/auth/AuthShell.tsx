@@ -74,7 +74,7 @@ function BrandPanel({ brand }: { brand: BrandCopy }) {
         </Link>
         <div className="flex flex-col gap-4 mt-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container text-primary w-fit">
-            <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+            <span className="material-symbols-outlined text-sm icon-filled">verified</span>
             <span className="text-label-sm font-semibold tracking-wide uppercase">Curation Collective</span>
           </div>
           <h1 className="text-display-lg text-on-surface tracking-tight">
@@ -148,7 +148,7 @@ function ArtisanBanner() {
   return (
     <div className="mt-8 pt-6 bg-surface-container-low rounded-lg p-4 flex items-center justify-between gap-3">
       <div className="flex items-center gap-3">
-        <span className="material-symbols-outlined text-primary text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>palette</span>
+        <span className="material-symbols-outlined text-primary text-xl icon-filled">palette</span>
         <div className="flex flex-col">
           <span className="text-label-md text-on-surface">Are you a master craftsperson?</span>
           <span className="text-caption text-on-surface-variant">Access studio registry and direct provenance vaults</span>

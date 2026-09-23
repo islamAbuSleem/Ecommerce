@@ -170,6 +170,10 @@ body {
   font-family: var(--font-material-symbols);
 }
 
+.icon-filled {
+  font-variation-settings: "FILL" 1;
+}
+
 @utility text-display-lg {
   font-size: 36px;
   font-weight: 600;
