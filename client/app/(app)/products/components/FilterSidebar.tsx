@@ -1,4 +1,5 @@
 import type { ListParams } from "@/services/products.service";
+import { Icon } from "@/components/ui/components/Icon";
 
 export const MAX_PRICE_LIMIT = 1000;
 const PRICE_STEP = 10;
@@ -35,12 +36,9 @@ export function FilterSidebar({ activeCategory, activePill, pills, tags, maxPric
                     active ? "text-primary font-semibold" : "text-on-surface-variant group-hover:text-on-surface"
                   }`}
                 >
-                  <span
-                    aria-hidden="true"
-                    className={`material-symbols-outlined text-[20px] ${active ? "icon-filled" : ""}`}
-                  >
+                  <Icon size="md" filled={active} aria-hidden="true">
                     {active ? "check_box" : "check_box_outline_blank"}
-                  </span>
+                  </Icon>
                   {label}
                 </span>
               </button>
@@ -67,12 +65,9 @@ export function FilterSidebar({ activeCategory, activePill, pills, tags, maxPric
                     active ? "text-primary font-semibold" : "text-on-surface-variant group-hover:text-on-surface"
                   }`}
                 >
-                  <span
-                    aria-hidden="true"
-                    className={`material-symbols-outlined text-[20px] ${active ? "icon-filled" : ""}`}
-                  >
+                  <Icon size="md" filled={active} aria-hidden="true">
                     {active ? "check_box" : "check_box_outline_blank"}
-                  </span>
+                  </Icon>
                   {label}
                 </span>
               </button>
@@ -115,7 +110,7 @@ export function FilterSidebar({ activeCategory, activePill, pills, tags, maxPric
 
       <div className="bg-surface-container-high/60 p-4 rounded-xl space-y-2">
         <div className="flex items-center gap-2 text-primary font-semibold text-label-md">
-          <span aria-hidden="true" className="material-symbols-outlined text-[18px]">verified_user</span>
+          <Icon size="md" aria-hidden="true">verified_user</Icon>
           <span>Provenance Pledge</span>
         </div>
         <p className="text-caption text-on-surface-variant">

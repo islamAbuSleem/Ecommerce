@@ -9,6 +9,7 @@ import { BuyBox } from "./BuyBox";
 import { SellerBanner } from "./SellerBanner";
 import { ProductTabs } from "./ProductTabs";
 import { SpecsAccordion } from "./SpecsAccordion";
+import { Icon } from "@/components/ui/components/Icon";
 
 export function ProductDetail({ id }: { id: string }) {
   const [product, setProduct] = useState<Product | null>(null);
@@ -60,11 +61,11 @@ export function ProductDetail({ id }: { id: string }) {
         <Link href="/" className="hover:text-primary transition-colors">
           Home
         </Link>
-        <span className="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+        <Icon size="xs" className="text-outline">chevron_right</Icon>
         <Link href="/products" className="hover:text-primary transition-colors">
           Explore
         </Link>
-        <span className="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+        <Icon size="xs" className="text-outline">chevron_right</Icon>
         <span className="text-on-surface font-semibold truncate">
           {product?.name ?? "Loading…"}
         </span>
@@ -75,7 +76,7 @@ export function ProductDetail({ id }: { id: string }) {
         href="/products"
         className="lg:hidden inline-flex items-center gap-1 py-3 text-label-sm text-on-surface-variant hover:text-on-surface transition-colors"
       >
-        <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+        <Icon size="md">arrow_back</Icon>
         Back to results
       </Link>
 
@@ -99,7 +100,7 @@ export function ProductDetail({ id }: { id: string }) {
       ) : !product && (error || isNotFound) ? (
         isNotFound ? (
           <div className="flex flex-col items-center gap-3 bg-surface-container-lowest rounded-xl shadow-sm p-10 text-center max-w-lg mx-auto">
-            <span className="material-symbols-outlined text-[32px] text-outline">search_off</span>
+            <Icon size="xl" className="text-outline">search_off</Icon>
             <p className="text-headline-md text-on-surface">Product not found</p>
             <p className="text-body-sm text-on-surface-variant">
               This listing may have been removed or the link is incorrect.
@@ -108,13 +109,13 @@ export function ProductDetail({ id }: { id: string }) {
               href="/products"
               className="mt-1 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-on-primary text-label-md hover:bg-primary-container transition-colors"
             >
-              <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+              <Icon size="md">arrow_back</Icon>
               Back to products
             </Link>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-3 bg-surface-container-lowest rounded-xl shadow-sm p-10 text-center max-w-lg mx-auto">
-            <span className="material-symbols-outlined text-[32px] text-outline">error</span>
+            <Icon size="xl" className="text-outline">error</Icon>
             <p className="text-headline-md text-on-surface">Something went wrong</p>
             <p className="text-body-sm text-on-surface-variant">{error}</p>
             <button
@@ -146,7 +147,7 @@ export function ProductDetail({ id }: { id: string }) {
                   <p className="text-body-sm text-on-surface-variant leading-relaxed">{product.description}</p>
                   <div className="flex flex-wrap gap-2 pt-1">
                     <span className="inline-flex items-center gap-1 bg-surface-container-low text-on-surface-variant px-2.5 py-1 rounded-full text-label-sm">
-                      <span className="material-symbols-outlined text-[15px] text-primary">category</span>
+                      <Icon size="sm" className="text-primary">category</Icon>
                       {product.category}
                     </span>
                   </div>
@@ -171,7 +172,7 @@ export function ProductDetail({ id }: { id: string }) {
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   className="w-8 h-8 rounded-md flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[18px]">remove</span>
+                  <Icon size="md">remove</Icon>
                 </button>
                 <span className="w-8 text-center text-label-md text-on-surface select-none">{quantity}</span>
                 <button
@@ -180,7 +181,7 @@ export function ProductDetail({ id }: { id: string }) {
                   onClick={() => setQuantity((q) => Math.min(product.stock > 0 ? product.stock : 1, q + 1))}
                   className="w-8 h-8 rounded-md flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[18px]">add</span>
+                  <Icon size="md">add</Icon>
                 </button>
               </div>
               <button
@@ -189,7 +190,7 @@ export function ProductDetail({ id }: { id: string }) {
                 title="Checkout is coming soon"
                 className="flex-1 h-11 px-4 rounded-lg bg-primary text-on-primary text-label-md flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] disabled:opacity-50"
               >
-                <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
+                <Icon size="md">shopping_bag</Icon>
                 <span>Available soon</span>
               </button>
             </div>

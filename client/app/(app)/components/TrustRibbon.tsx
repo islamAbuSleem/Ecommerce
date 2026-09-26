@@ -1,3 +1,4 @@
+import { Icon } from "@/components/ui/components/Icon";
 const RIBBON: { icon: string; title: string; sub: string; tile: string }[] = [
   {
     icon: "payments",
@@ -34,7 +35,7 @@ export function TrustRibbon() {
             <div
               className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-primary ${tile}`}
             >
-              <span className="material-symbols-outlined text-[24px]">{icon}</span>
+              <Icon size="lg">{icon}</Icon>
             </div>
             <div className="min-w-0">
               <span className="block text-headline-sm text-on-surface">{title}</span>

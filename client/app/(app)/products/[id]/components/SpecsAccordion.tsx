@@ -2,6 +2,7 @@
 
 import type { Product } from "@/services/products.service";
 import { specRows } from "./product-specs";
+import { Icon } from "@/components/ui/components/Icon";
 
 export function SpecsAccordion({ product }: { product: Product }) {
   const rows = specRows(product);
@@ -52,11 +53,11 @@ export function SpecsAccordion({ product }: { product: Product }) {
           className="bg-surface-container-lowest rounded-xl shadow-sm px-4 open:pb-4"
         >
           <summary className="flex items-center gap-2 py-3.5 text-label-md text-on-surface cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-            <span aria-hidden="true" className="material-symbols-outlined text-[20px] text-primary">{icon}</span>
+            <Icon size="md" className="text-primary" aria-hidden="true">{icon}</Icon>
             <span className="flex-1">{title}</span>
-            <span aria-hidden="true" className="material-symbols-outlined text-[20px] text-outline">
+            <Icon size="md" className="text-outline" aria-hidden="true">
               expand_more
-            </span>
+            </Icon>
           </summary>
           {body}
         </details>

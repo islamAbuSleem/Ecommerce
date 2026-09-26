@@ -1,3 +1,4 @@
+import { Icon } from "@/components/ui/components/Icon";
 const FEATURES = [
   {
     icon: "shield",
@@ -25,7 +26,7 @@ export function FeatureGrid() {
       {FEATURES.map(({ icon, title, caption, tint }) => (
         <div key={title} className="flex flex-col gap-2 p-3.5 rounded-lg bg-surface-container-lowest shadow-sm">
           <div className={`w-8 h-8 rounded-full flex items-center justify-center ${tint}`}>
-            <span className="material-symbols-outlined text-lg">{icon}</span>
+            <Icon size="md">{icon}</Icon>
           </div>
           <span className="text-label-md text-on-surface">{title}</span>
           <span className="text-caption text-on-surface-variant">{caption}</span>

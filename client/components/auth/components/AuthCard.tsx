@@ -1,3 +1,4 @@
+import { Icon } from "@/components/ui/components/Icon";
 type Props = {
   title?: string;
   subtitle?: string;
@@ -55,7 +56,7 @@ export function AuthCard({
           <div className="flex flex-col items-center text-center mb-5 relative z-10">
             <div className="w-16 h-16 rounded-xl bg-surface-container-low shadow-sm flex items-center justify-center p-2 mb-3 transition-transform active:scale-95 duration-200">
               <div className="w-full h-full rounded-lg bg-logo-gradient flex items-center justify-center">
-                <span className="material-symbols-outlined text-white text-2xl">token</span>
+                <Icon size="lg" className="text-white">token</Icon>
               </div>
             </div>
             {title && <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-tight">{title}</h1>}

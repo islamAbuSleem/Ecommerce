@@ -1,3 +1,4 @@
+import { Icon } from "@/components/ui/components/Icon";
 type Props = {
   label?: string;
   error?: string;
@@ -26,14 +27,14 @@ export function Input({
           {...rest}
         />
         {icon && iconPosition === "left" && (
-          <span className="material-symbols-outlined text-[18px] text-outline absolute left-3 top-2.5 select-none pointer-events-none">
+          <Icon size="md" className="text-outline absolute left-3 top-2.5 select-none pointer-events-none">
             {icon}
-          </span>
+          </Icon>
         )}
         {icon && iconPosition === "right" && (
-          <span className="material-symbols-outlined text-lg text-on-surface-variant absolute right-3 top-2.5 select-none pointer-events-none">
+          <Icon size="md" className="text-on-surface-variant absolute right-3 top-2.5 select-none pointer-events-none">
             {icon}
-          </span>
+          </Icon>
         )}
       </div>
       {error && <span className="text-xs text-error">{error}</span>}

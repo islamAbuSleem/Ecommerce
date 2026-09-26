@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Icon } from "@/components/ui/components/Icon";
 
 export type SpotlightSeller = {
   name: string;
@@ -32,7 +33,7 @@ export function VendorSpotlight({ seller }: { seller: SpotlightSeller | null }) 
             <div className="flex items-center gap-1">
               <h3 className="truncate text-label-md font-semibold text-on-surface">{seller.name}</h3>
               {seller.verified && (
-                <span className="material-symbols-outlined text-[16px] text-primary">verified</span>
+                <Icon size="sm" className="text-primary">verified</Icon>
               )}
             </div>
             <p className="text-caption text-on-surface-variant">
@@ -51,9 +52,9 @@ export function VendorSpotlight({ seller }: { seller: SpotlightSeller | null }) 
       <div className="grid grid-cols-3 gap-2">
         {ASSURANCES.map(({ icon, title, sub }) => (
           <div key={title} className="rounded-xl bg-surface-container-low p-3">
-            <span className="material-symbols-outlined mb-1 block text-[20px] text-primary">
+            <Icon size="md" className="mb-1 block text-primary">
               {icon}
-            </span>
+            </Icon>
             <span className="block text-label-sm font-semibold text-on-surface">{title}</span>
             <span className="block text-caption text-on-surface-variant">{sub}</span>
           </div>
@@ -83,7 +84,7 @@ export function VendorSpotlight({ seller }: { seller: SpotlightSeller | null }) 
           className="inline-flex items-center gap-1 rounded-lg bg-surface-container-low px-4 py-2 text-label-md text-on-surface transition-colors hover:bg-surface-container-high"
         >
           <span>Storefront</span>
-          <span className="material-symbols-outlined text-[16px]">store</span>
+          <Icon size="sm">store</Icon>
         </Link>
       </div>
     </section>

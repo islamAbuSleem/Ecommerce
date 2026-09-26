@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/components/auth/AuthContext";
+import { Icon } from "@/components/ui/components/Icon";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -21,7 +22,7 @@ export function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         <Link href="/" className="flex items-center gap-2">
           <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-logo-gradient">
-            <span className="material-symbols-outlined text-white text-[22px]">token</span>
+            <Icon size="lg" className="text-white">token</Icon>
           </span>
           <span className="text-lg font-semibold text-text-darkest">Marketplace</span>
         </Link>

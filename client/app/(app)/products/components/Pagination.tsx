@@ -1,3 +1,4 @@
+import { Icon } from "@/components/ui/components/Icon";
 type Props = {
   page: number;
   totalPages: number;
@@ -23,7 +24,7 @@ export function Pagination({ page, totalPages, total, count, onChange }: Props) 
           disabled={page <= 1}
           className="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container text-label-sm flex items-center gap-1 transition-colors disabled:opacity-40 disabled:pointer-events-none"
         >
-          <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+          <Icon size="sm">arrow_back</Icon>
           <span>Previous</span>
         </button>
         <span className="px-2 text-label-sm text-on-surface font-semibold">
@@ -36,7 +37,7 @@ export function Pagination({ page, totalPages, total, count, onChange }: Props) 
           className="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container text-label-sm flex items-center gap-1 transition-colors disabled:opacity-40 disabled:pointer-events-none"
         >
           <span>Next</span>
-          <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+          <Icon size="sm">arrow_forward</Icon>
         </button>
       </div>
     </div>

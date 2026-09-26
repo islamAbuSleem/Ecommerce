@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Icon } from "@/components/ui/components/Icon";
 
 export function WishlistButton() {
   const [wishlisted, setWishlisted] = useState(false);
@@ -15,11 +16,9 @@ export function WishlistButton() {
         wishlisted ? "text-error" : "text-on-surface-variant"
       }`}
     >
-      <span
-        className={`material-symbols-outlined text-[16px] ${wishlisted ? "icon-filled" : ""}`}
-      >
+      <Icon size="sm" filled={wishlisted}>
         favorite
-      </span>
+      </Icon>
     </button>
   );
 }

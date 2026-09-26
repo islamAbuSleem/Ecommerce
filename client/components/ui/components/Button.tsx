@@ -1,3 +1,4 @@
+import { Icon } from "@/components/ui/components/Icon";
 type Variant = "primary" | "secondary" | "ghost" | "social";
 
 type Props = {
@@ -32,9 +33,9 @@ export function Button({
     >
       {children}
       {icon && (
-        <span className={`material-symbols-outlined ${variant === "social" ? "text-base" : "text-[18px]"}`}>
+        <Icon size={variant === "social" ? "sm" : "md"}>
           {icon}
-        </span>
+        </Icon>
       )}
     </button>
   );

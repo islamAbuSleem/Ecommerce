@@ -1,6 +1,7 @@
 import type { Product } from "@/services/products.service";
 import { RatingStars } from "@/components/products/components/RatingStars";
 import { isVerifiedSeller } from "@/components/products/sellers";
+import { Icon } from "@/components/ui/components/Icon";
 
 type Props = {
   product: Product;
@@ -17,9 +18,9 @@ export function BuyBox({ product, quantity, setQuantity }: Props) {
       <div className="flex items-center justify-between flex-wrap gap-2">
         {product.seller && isVerifiedSeller(product.seller.sellerStatus) ? (
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-container text-primary text-label-sm">
-            <span className="material-symbols-outlined icon-filled text-[15px]">
+            <Icon size="sm" filled>
               verified
-            </span>
+            </Icon>
             Verified Seller
           </span>
         ) : (
@@ -72,7 +73,7 @@ export function BuyBox({ product, quantity, setQuantity }: Props) {
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
             className="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container-lowest transition-colors disabled:opacity-40"
           >
-            <span className="material-symbols-outlined text-[18px]">remove</span>
+            <Icon size="md">remove</Icon>
           </button>
           <span className="text-headline-sm text-on-surface w-10 text-center">{quantity}</span>
           <button
@@ -82,7 +83,7 @@ export function BuyBox({ product, quantity, setQuantity }: Props) {
             onClick={() => setQuantity((q) => Math.min(product.stock > 0 ? product.stock : 1, q + 1))}
             className="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container-lowest transition-colors disabled:opacity-40"
           >
-            <span className="material-symbols-outlined text-[18px]">add</span>
+            <Icon size="md">add</Icon>
           </button>
         </div>
         <span className="text-caption text-outline">
@@ -96,24 +97,24 @@ export function BuyBox({ product, quantity, setQuantity }: Props) {
         title="Checkout is coming soon"
         className="w-full h-11 px-4 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-label-md flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.99] disabled:opacity-50"
       >
-        <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
+        <Icon size="md">shopping_bag</Icon>
         <span>Available soon</span>
       </button>
 
       <div className="bg-surface-container-low rounded-lg p-4 flex flex-col gap-3">
         <div className="flex items-start gap-2.5">
-          <span className="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">
+          <Icon size="md" className="text-primary shrink-0 mt-0.5">
             verified_user
-          </span>
+          </Icon>
           <div>
             <p className="text-label-sm text-on-surface">Buyer Protection</p>
             <p className="text-caption text-outline">30-day hassle-free returns</p>
           </div>
         </div>
         <div className="flex items-start gap-2.5">
-          <span className="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">
+          <Icon size="md" className="text-primary shrink-0 mt-0.5">
             local_shipping
-          </span>
+          </Icon>
           <div>
             <p className="text-label-sm text-on-surface">Insured Delivery</p>
             <p className="text-caption text-outline">

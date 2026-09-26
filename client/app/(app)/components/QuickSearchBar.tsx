@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Icon } from "@/components/ui/components/Icon";
 
 export function QuickSearchBar() {
   const router = useRouter();
@@ -16,9 +17,9 @@ export function QuickSearchBar() {
   return (
     <form onSubmit={submit} className="flex items-center gap-2" role="search">
       <div className="relative flex flex-1 items-center">
-        <span className="material-symbols-outlined pointer-events-none absolute left-3 text-[20px] text-on-surface-variant">
+        <Icon size="md" className="pointer-events-none absolute left-3 text-on-surface-variant">
           search
-        </span>
+        </Icon>
         <input
           type="search"
           value={query}
@@ -33,7 +34,7 @@ export function QuickSearchBar() {
         aria-label="Submit search"
         className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-surface-container-lowest text-on-surface shadow-sm transition-all hover:bg-surface-container-low active:scale-95"
       >
-        <span className="material-symbols-outlined text-[20px]">search</span>
+        <Icon size="md">search</Icon>
       </button>
     </form>
   );

@@ -1,3 +1,4 @@
+import { Icon } from "@/components/ui/components/Icon";
 const GUARANTEES: { icon: string; title: string; sub: string }[] = [
   { icon: "verified_user", title: "Buyer Safe", sub: "Full refund escrow" },
   { icon: "local_shipping", title: "Direct Dispatch", sub: "Tracked craft transit" },
@@ -13,7 +14,7 @@ export function TrustBar() {
       <div className="grid grid-cols-3 gap-2 text-center">
         {GUARANTEES.map(({ icon, title, sub }) => (
           <div key={title} className="flex flex-col items-center gap-1">
-            <span className="material-symbols-outlined text-[20px] text-primary">{icon}</span>
+            <Icon size="md" className="text-primary">{icon}</Icon>
             <span className="text-[11px] font-semibold text-on-surface">{title}</span>
             <span className="text-[10px] text-on-surface-variant">{sub}</span>
           </div>

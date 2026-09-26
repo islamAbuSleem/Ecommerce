@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ProductImage } from "./ProductImage";
 import { stockSubline } from "./StockBadge";
+import { Icon } from "@/components/ui/components/Icon";
 
 export type ProductCardProduct = {
   id: string;
@@ -37,16 +38,16 @@ export function ProductCard({ product, className = "" }: Props) {
             <span className="truncate hover:text-primary transition-colors flex items-center gap-1 min-w-0">
               <span className="truncate">{product.sellerName ?? "Independent maker"}</span>
               {product.sellerVerified && (
-                <span className="material-symbols-outlined icon-filled text-primary text-[14px] shrink-0">
+                <Icon size="xs" filled className="text-primary shrink-0">
                   verified
-                </span>
+                </Icon>
               )}
             </span>
             {product.ratingAvg != null && (
               <span className="flex items-center gap-0.5 text-on-surface text-caption shrink-0">
-                <span className="material-symbols-outlined icon-filled text-[13px] text-tertiary-container">
+                <Icon size="xs" filled className="text-tertiary-container">
                   star
-                </span>
+                </Icon>
                 <span>{product.ratingAvg.toFixed(1)}</span>
                 {product.ratingCount != null && (
                   <span className="text-outline">({product.ratingCount})</span>
@@ -73,7 +74,7 @@ export function ProductCard({ product, className = "" }: Props) {
             aria-label={`View ${product.name}`}
             className="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center shadow-sm transition-transform active:scale-90 hover:bg-primary-container"
           >
-            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+            <Icon size="md">arrow_forward</Icon>
           </Link>
         </div>
       </div>
