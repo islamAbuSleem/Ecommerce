@@ -15,7 +15,7 @@ const BRAND = {
   headline: "Begin your journey through authenticated craft and curated provenance.",
   subcopy: "Join a global collective of master artisans and discerning patrons. Every transaction secured by cryptographic escrow and studio lineage verification.",
   quote: "The Aura registry gave our Kyoto workshop instant global reach, with verified provenance for every piece leaving our studio.",
-  const [keepSignedIn, setKeepSignedIn] = useState(false);
+  name: "Yuki Tanaka",
   shop: "Tanaka Ceramics, Kyoto",
 };
 
