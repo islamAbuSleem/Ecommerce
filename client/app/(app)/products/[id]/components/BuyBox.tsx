@@ -1,9 +1,6 @@
 import type { Product } from "@/services/products.service";
 import { RatingStars } from "@/components/products/components/RatingStars";
-
-function isVerifiedSeller(status: string | null | undefined): boolean {
-  return status === "approved";
-}
+import { isVerifiedSeller } from "@/components/products/sellers";
 
 type Props = {
   product: Product;

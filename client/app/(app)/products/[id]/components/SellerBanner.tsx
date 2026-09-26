@@ -1,8 +1,5 @@
 import type { Product } from "@/services/products.service";
-
-function isVerifiedSeller(status: string | null | undefined): boolean {
-  return status === "approved";
-}
+import { isVerifiedSeller } from "@/components/products/sellers";
 
 function sellerInitials(name: string | null | undefined): string {
   if (!name) return "?";

@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/components/Button";
 import { Input } from "@/components/ui/components/Input";
 import { AuthShell, type AuthMode } from "@/components/auth/components/AuthShell";
+import { EmailField } from "@/components/auth/components/EmailField";
+import { PasswordField } from "@/components/auth/components/PasswordField";
 import { useAuth } from "@/components/auth/AuthContext";
 import { authService } from "@/services/auth.service";
 
@@ -37,7 +39,6 @@ export default function LoginPage() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [isVendor, setIsVendor] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -104,48 +105,23 @@ export default function LoginPage() {
           />
         )}
 
-        <div className="flex flex-col gap-1.5">
-          <label className="text-label-md text-on-surface" htmlFor="email">Patron or Studio Email</label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="alex.morgan@domain.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            icon="mail"
-            iconPosition="right"
-            required
-          />
-        </div>
+        <EmailField
+          value={email}
+          onChange={setEmail}
+          placeholder="alex.morgan@domain.com"
+        />
 
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center justify-between">
-            <label className="text-label-md text-on-surface" htmlFor="password">Password</label>
+        <PasswordField
+          value={password}
+          onChange={setPassword}
+          placeholder="••••••••••••"
+          minLength={8}
+          labelAction={
             <Link href="#forgot" className="text-caption text-primary hover:underline" id="forgot-link">
               Forgot password?
             </Link>
-          </div>
-          <div className="relative">
-            <input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="••••••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={8}
-              className="w-full h-11 px-3.5 pr-10 rounded-lg bg-surface-container-low text-on-surface text-body-md placeholder:text-outline outline-none focus:bg-surface-container transition-all"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-2.5 top-2 p-1 text-on-surface-variant hover:text-on-surface"
-              aria-label="Toggle password visibility"
-            >
-              <span className="material-symbols-outlined text-lg">{showPassword ? "visibility_off" : "visibility"}</span>
-            </button>
-          </div>
-        </div>
+          }
+        />
 
         {mode === "register" && (
           <div className="flex items-center gap-2 pt-1">

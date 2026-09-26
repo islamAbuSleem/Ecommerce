@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ProductCard } from "@/components/products/components/ProductCard";
+import { isVerifiedSeller } from "@/components/products/sellers";
 import { Input } from "@/components/ui/components/Input";
 import { SkeletonGrid } from "./components/SkeletonGrid";
 import { FilterSidebar } from "./components/FilterSidebar";
@@ -40,10 +41,6 @@ const SORT_OPTIONS: { id: ProductSort; label: string }[] = [
 
 const PAGE_SIZE = 12;
 const SEARCH_DEBOUNCE_MS = 300;
-
-function isVerifiedSeller(status: string | null | undefined): boolean {
-  return status === "approved";
-}
 
 export default function ProductsPage() {
   const [query, setQuery] = useState("");
