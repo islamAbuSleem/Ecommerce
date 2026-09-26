@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { ProductCard } from "@/components/products/components/ProductCard";
 import { isVerifiedSeller } from "@/components/products/sellers";
 import { Input } from "@/components/ui/components/Input";
@@ -25,11 +26,14 @@ const FILTER_PILLS: { id: string; label: string; params: Partial<ListParams> }[]
 ];
 
 // Design-system rule: TEXT labels, no emojis (mock shows emoji here).
+// Labels must match the BE seed taxonomy verbatim (exact-match filtering).
 const CATEGORY_TAGS: { id: string; label: string }[] = [
-  { id: "Tech & Audio", label: "Tech & Audio" },
-  { id: "Desk Setup", label: "Desk Setup" },
-  { id: "Handmade Home", label: "Handmade Home" },
-  { id: "Leathercraft", label: "Leathercraft" },
+  { id: "Ceramics", label: "Ceramics" },
+  { id: "Leather Goods", label: "Leather Goods" },
+  { id: "Desk Tech", label: "Desk Tech" },
+  { id: "Studio Wood", label: "Studio Wood" },
+  { id: "Fine Jewelry", label: "Fine Jewelry" },
+  { id: "Woven Textile", label: "Woven Textile" },
 ];
 
 const SORT_OPTIONS: { id: ProductSort; label: string }[] = [
@@ -42,13 +46,41 @@ const SORT_OPTIONS: { id: ProductSort; label: string }[] = [
 const PAGE_SIZE = 12;
 const SEARCH_DEBOUNCE_MS = 300;
 
+type Density = "comfortable" | "compact";
+
+const DENSITY_OPTIONS: { id: Density; label: string; icon: string }[] = [
+  { id: "comfortable", label: "Comfortable view", icon: "grid_view" },
+  { id: "compact", label: "Compact view", icon: "density_small" },
+];
+
+const VALID_SORTS: ProductSort[] = ["newest", "price-asc", "price-desc", "rating"];
+
+function getInitialSort(raw: string | null): ProductSort {
+  return VALID_SORTS.includes(raw as ProductSort) ? (raw as ProductSort) : "newest";
+}
+
 export default function ProductsPage() {
-  const [query, setQuery] = useState("");
-  const [debouncedQ, setDebouncedQ] = useState("");
+  return (
+    <Suspense fallback={<SkeletonGrid />}>
+      <ProductsPageContent />
+    </Suspense>
+  );
+}
+
+function ProductsPageContent() {
+  const searchParams = useSearchParams();
+  const initialQ = searchParams.get("q") ?? "";
+  const initialCategory = searchParams.get("category");
+  const initialSort = getInitialSort(searchParams.get("sort"));
+
+  const [query, setQuery] = useState(initialQ);
+  const [debouncedQ, setDebouncedQ] = useState(initialQ.trim());
   const [activePill, setActivePill] = useState("all");
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [sort, setSort] = useState<ProductSort>("newest");
+  const [activeCategory, setActiveCategory] = useState<string | null>(initialCategory);
+  const [sort, setSort] = useState<ProductSort>(initialSort);
   const [page, setPage] = useState(1);
+  const [density, setDensity] = useState<Density>("comfortable");
+  const [maxPrice, setMaxPrice] = useState<number | null>(null);
   const [items, setItems] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -77,6 +109,7 @@ export default function ProductsPage() {
     const params: ListParams = { sort, page, limit: PAGE_SIZE, ...pill?.params };
     if (debouncedQ) params.q = debouncedQ;
     if (activeCategory) params.category = activeCategory;
+    if (maxPrice != null) params.maxPrice = maxPrice;
 
     productsService
       .list(params)
@@ -101,10 +134,11 @@ export default function ProductsPage() {
     return () => {
       cancelled = true;
     };
-  }, [debouncedQ, activePill, activeCategory, sort, page, retryKey]);
+  }, [debouncedQ, activePill, activeCategory, sort, page, retryKey, maxPrice]);
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-  const hasActiveFilters = activePill !== "all" || activeCategory !== null || debouncedQ !== "";
+  const hasActiveFilters =
+    activePill !== "all" || activeCategory !== null || debouncedQ !== "" || maxPrice != null;
   const showSkeleton = loading && items.length === 0;
 
   const resetAll = () => {
@@ -114,12 +148,14 @@ export default function ProductsPage() {
     setActiveCategory(null);
     setSort("newest");
     setPage(1);
+    setMaxPrice(null);
     setLoading(true);
     setError(null);
   };
 
   const selectPill = (id: string) => {
     setActivePill(id);
+    if (id === "under100") setMaxPrice(null);
     setPage(1);
     setLoading(true);
     setError(null);
@@ -127,6 +163,14 @@ export default function ProductsPage() {
 
   const toggleCategory = (id: string) => {
     setActiveCategory((prev) => (prev === id ? null : id));
+    setPage(1);
+    setLoading(true);
+    setError(null);
+  };
+
+  const changeMaxPrice = (next: number | null) => {
+    setMaxPrice(next);
+    setActivePill((prev) => (prev === "under100" ? "all" : prev));
     setPage(1);
     setLoading(true);
     setError(null);
@@ -175,6 +219,32 @@ export default function ProductsPage() {
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
+            <div
+              role="group"
+              aria-label="Grid density"
+              className="hidden lg:flex items-center gap-1 bg-surface-container-lowest rounded-lg shadow-sm px-1.5 py-1"
+            >
+              {DENSITY_OPTIONS.map(({ id, label, icon }) => {
+                const pressed = density === id;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    title={label}
+                    aria-label={label}
+                    aria-pressed={pressed}
+                    onClick={() => setDensity(id)}
+                    className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors ${
+                      pressed
+                        ? "bg-primary text-on-primary"
+                        : "text-on-surface-variant hover:text-on-surface"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-[20px]">{icon}</span>
+                  </button>
+                );
+              })}
+            </div>
             <div className="relative flex items-center bg-surface-container-lowest rounded-lg shadow-sm px-3 py-1.5 gap-1 text-on-surface">
               <span className="text-label-sm text-on-surface-variant">Sort by:</span>
               <select
@@ -277,7 +347,7 @@ export default function ProductsPage() {
 
       {/* Applied-filters strip (desktop) */}
       {hasActiveFilters && (
-        <div className="hidden lg:flex flex-wrap items-center gap-2 mb-6 bg-surface-container-low p-3 rounded-xl">
+        <div className="flex flex-wrap items-center gap-2 mb-6 bg-surface-container-low p-3 rounded-xl">
           <span className="text-label-sm text-on-surface-variant px-1 font-medium">Applied:</span>
           {activePill !== "all" && (
             <span className="inline-flex items-center gap-1 bg-surface-container-lowest text-on-surface text-label-sm px-2.5 py-1 rounded-full shadow-sm">
@@ -315,7 +385,22 @@ export default function ProductsPage() {
                   setQuery("");
                   setDebouncedQ("");
                   setPage(1);
+                  setLoading(true);
+                  setError(null);
                 }}
+                className="hover:text-primary transition-colors ml-1"
+              >
+                <span className="material-symbols-outlined text-[14px] align-middle">close</span>
+              </button>
+            </span>
+          )}
+          {maxPrice != null && (
+            <span className="inline-flex items-center gap-1 bg-surface-container-lowest text-on-surface text-label-sm px-2.5 py-1 rounded-full shadow-sm">
+              Up to ${maxPrice}
+              <button
+                type="button"
+                aria-label="Clear max price"
+                onClick={() => changeMaxPrice(null)}
                 className="hover:text-primary transition-colors ml-1"
               >
                 <span className="material-symbols-outlined text-[14px] align-middle">close</span>
@@ -355,6 +440,8 @@ export default function ProductsPage() {
           activePill={activePill}
           pills={FILTER_PILLS}
           tags={CATEGORY_TAGS}
+          maxPrice={maxPrice}
+          onMaxPrice={changeMaxPrice}
           onToggleCategory={toggleCategory}
           onSelectPill={selectPill}
         />
@@ -397,7 +484,13 @@ export default function ProductsPage() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
+              <div
+                className={
+                  density === "compact"
+                    ? "grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4"
+                    : "grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4"
+                }
+              >
                 {items.map((product) => (
                   <ProductCard
                     key={product.id}

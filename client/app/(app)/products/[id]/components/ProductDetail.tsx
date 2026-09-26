@@ -7,6 +7,8 @@ import { productsService, type Product } from "@/services/products.service";
 import { Gallery } from "./Gallery";
 import { BuyBox } from "./BuyBox";
 import { SellerBanner } from "./SellerBanner";
+import { ProductTabs } from "./ProductTabs";
+import { SpecsAccordion } from "./SpecsAccordion";
 
 export function ProductDetail({ id }: { id: string }) {
   const [product, setProduct] = useState<Product | null>(null);
@@ -151,6 +153,12 @@ export function ProductDetail({ id }: { id: string }) {
                 </div>
               )}
             </div>
+          </div>
+
+          {/* Narrative tabs (desktop) + accordion (mobile) */}
+          <div className="mt-6">
+            <ProductTabs product={product} />
+            <SpecsAccordion product={product} />
           </div>
 
           {/* Sticky mobile purchase bar */}
