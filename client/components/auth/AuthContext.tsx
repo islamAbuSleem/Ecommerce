@@ -38,6 +38,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    let mounted = true;
+    void (async () => {
+      const me = await authService.me();
+      if (mounted) {
+        setUser(me);
+        setLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, []);
     void (async () => {
       const me = await authService.me();
       setUser(me);
