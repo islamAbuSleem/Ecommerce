@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Providers } from "@/components/auth/Providers";
-import { RouteTransition } from "@/components/ui/RouteTransition";
+import { RouteTransition } from "@/components/ui/components/RouteTransition";
 import "./globals.css";
 
 const inter = Inter({

@@ -10,6 +10,12 @@ enum SellerStatus {
   rejected
 }
 
+enum ProductStatus {
+  active
+  inactive
+  deleted
+}
+
 model User {
   id           String       @id @default(uuid())
   email        String       @unique
@@ -22,6 +28,26 @@ model User {
   avatarUrl    String?
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
+  products     Product[]
+}
+
+model Product {
+  id           String        @id @default(uuid())
+  name         String
+  slug         String        @unique
+  description  String?
+  price        Float
+  images       String[]
+  stock        Int           @default(0)
+  status       ProductStatus @default(active)
+  category     String
+  ratingAvg    Float         @default(0)
+  ratingCount  Int           @default(0)
+  freeShipping Boolean       @default(false)
+  sellerId     String
+  seller       User          @relation(fields: [sellerId], references: [id], onDelete: Restrict)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 generator client {          // "which SDK to build from this schema, and where to put it"

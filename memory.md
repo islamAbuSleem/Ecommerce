@@ -39,3 +39,6 @@ Last updated: 2026-09-23
 ## Open questions
 
 - None blocking. Toast/visible-success-message system deferred (interceptor ready to feed it). `memory.md` commit precedent: included in past commits, keep consistent.
+- Catalog slice deferrals (decided 2026-09-23, revisit later):
+  - Reviews subsystem — the source of truth that will maintain `Product.ratingAvg`/`ratingCount` (seeded honestly until then)
+  - Real shipping logic — currently a seller-provided `freeShipping` boolean (matches mock pills without faking a subsystem)

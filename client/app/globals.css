@@ -137,6 +137,10 @@ body {
   color: var(--color-text-primary);
 }
 
+button:not([disabled]) {
+  cursor: pointer;
+}
+
 @utility bg-logo-gradient {
   background: linear-gradient(45deg, var(--color-accent) 0%, var(--color-accent-deep) 100%);
 }
@@ -168,6 +172,10 @@ body {
 
 .material-symbols-outlined {
   font-family: var(--font-material-symbols);
+}
+
+.icon-filled {
+  font-variation-settings: "FILL" 1;
 }
 
 @utility text-display-lg {

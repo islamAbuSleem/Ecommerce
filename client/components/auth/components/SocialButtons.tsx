@@ -1,10 +1,12 @@
-import { SocialButton } from "@/components/ui/Button";
-import { AppleSvg, GitHubSvg, GoogleSvg } from "./icons";
+import { SocialButton } from "./SocialButton";
+import { AppleIcon } from "./AppleIcon";
+import { GitHubIcon } from "./GitHubIcon";
+import { GoogleIcon } from "./GoogleIcon";
 
 const PROVIDERS = [
-  { id: "google", label: "Continue with Google", Icon: GoogleSvg },
-  { id: "github", label: "Continue with GitHub", Icon: GitHubSvg },
-  { id: "apple", label: "Continue with Apple", Icon: AppleSvg },
+  { id: "google", label: "Continue with Google", Icon: GoogleIcon },
+  { id: "github", label: "Continue with GitHub", Icon: GitHubIcon },
+  { id: "apple", label: "Continue with Apple", Icon: AppleIcon },
 ] as const;
 
 export function SocialButtons({ apiUrl }: { apiUrl: string }) {

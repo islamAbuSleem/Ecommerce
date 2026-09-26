@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { AuthShell, type AuthMode } from "@/components/auth/AuthShell";
+import { Button } from "@/components/ui/components/Button";
+import { Input } from "@/components/ui/components/Input";
+import { AuthShell, type AuthMode } from "@/components/auth/components/AuthShell";
+import { EmailField } from "@/components/auth/components/EmailField";
+import { PasswordField } from "@/components/auth/components/PasswordField";
 import { useAuth } from "@/components/auth/AuthContext";
 import { authService } from "@/services/auth.service";
 
@@ -15,7 +17,7 @@ const BRAND = {
   headline: "Begin your journey through authenticated craft and curated provenance.",
   subcopy: "Join a global collective of master artisans and discerning patrons. Every transaction secured by cryptographic escrow and studio lineage verification.",
   quote: "The Aura registry gave our Kyoto workshop instant global reach, with verified provenance for every piece leaving our studio.",
-  const [keepSignedIn, setKeepSignedIn] = useState(false);
+  name: "Yuki Tanaka",
   shop: "Tanaka Ceramics, Kyoto",
 };
 
@@ -37,7 +39,6 @@ export default function RegisterPage() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState<"buyer" | "seller">("buyer");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -102,43 +103,18 @@ export default function RegisterPage() {
         </div>
         )}
 
-        <div className="flex flex-col gap-1.5">
-          <label className="text-label-md text-on-surface" htmlFor="email">Patron or Studio Email</label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="you@domain.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            icon="mail"
-            iconPosition="right"
-            required
-          />
-        </div>
+        <EmailField
+          value={email}
+          onChange={setEmail}
+          placeholder="you@domain.com"
+        />
 
-        <div className="flex flex-col gap-1.5">
-          <label className="text-label-md text-on-surface" htmlFor="password">Password</label>
-          <div className="relative">
-            <input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Min 8 characters"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={8}
-              className="w-full h-11 px-3.5 pr-10 rounded-lg bg-surface-container-low text-on-surface text-body-md placeholder:text-outline outline-none focus:bg-surface-container transition-all"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-2.5 top-2 p-1 text-on-surface-variant hover:text-on-surface"
-              aria-label="Toggle password visibility"
-            >
-              <span className="material-symbols-outlined text-lg">{showPassword ? "visibility_off" : "visibility"}</span>
-            </button>
-          </div>
-        </div>
+        <PasswordField
+          value={password}
+          onChange={setPassword}
+          placeholder="Min 8 characters"
+          minLength={8}
+        />
 
         {mode === "register" && (
           <div className="flex flex-col gap-1.5">
