@@ -2,8 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ProductCard } from "@/components/products/ProductCard";
-import { Input } from "@/components/ui/Input";
+import { ProductCard } from "@/components/products/components/ProductCard";
+import { Input } from "@/components/ui/components/Input";
+import { SkeletonGrid } from "./components/SkeletonGrid";
+import { FilterSidebar } from "./components/FilterSidebar";
+import { Pagination } from "./components/Pagination";
 import { ApiError } from "@/services/api";
 import {
   productsService,
@@ -40,23 +43,6 @@ const SEARCH_DEBOUNCE_MS = 300;
 
 function isVerifiedSeller(status: string | null | undefined): boolean {
   return status === "approved";
-}
-
-function SkeletonGrid() {
-  return (
-    <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4" aria-label="Loading products">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div key={i} className="flex flex-col bg-surface-container-lowest rounded-xl p-2.5 shadow-sm">
-          <div className="w-full aspect-square rounded-lg bg-surface-container-low animate-pulse" />
-          <div className="pt-2 space-y-2">
-            <div className="h-3 rounded bg-surface-container-low animate-pulse" />
-            <div className="h-3 w-2/3 rounded bg-surface-container-low animate-pulse" />
-            <div className="h-4 w-1/3 rounded bg-surface-container-low animate-pulse" />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
 }
 
 export default function ProductsPage() {
@@ -367,79 +353,14 @@ export default function ProductsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Sidebar (desktop) */}
-        <aside className="hidden lg:block lg:col-span-3 lg:sticky lg:top-24 space-y-4">
-          <div className="bg-surface-container-lowest p-5 rounded-xl shadow-sm space-y-3">
-            <span className="text-headline-sm text-on-surface">Categories</span>
-            <div className="space-y-2 text-body-sm">
-              {CATEGORY_TAGS.map(({ id, label }) => {
-                const active = activeCategory === id;
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => toggleCategory(id)}
-                    aria-pressed={active}
-                    className="flex items-center justify-between w-full group cursor-pointer"
-                  >
-                    <span
-                      className={`flex items-center gap-2 ${
-                        active ? "text-primary font-semibold" : "text-on-surface-variant group-hover:text-on-surface"
-                      }`}
-                    >
-                      <span
-                        className={`material-symbols-outlined text-[20px] ${active ? "icon-filled" : ""}`}
-                      >
-                        {active ? "check_box" : "check_box_outline_blank"}
-                      </span>
-                      {label}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="bg-surface-container-lowest p-5 rounded-xl shadow-sm space-y-3">
-            <span className="text-headline-sm text-on-surface">Refine</span>
-            <div className="space-y-2 text-body-sm">
-              {FILTER_PILLS.filter((p) => p.id !== "all").map(({ id, label }) => {
-                const active = activePill === id;
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => selectPill(active ? "all" : id)}
-                    aria-pressed={active}
-                    className="flex items-center justify-between w-full group cursor-pointer"
-                  >
-                    <span
-                      className={`flex items-center gap-2 ${
-                        active ? "text-primary font-semibold" : "text-on-surface-variant group-hover:text-on-surface"
-                      }`}
-                    >
-                      <span
-                        className={`material-symbols-outlined text-[20px] ${active ? "icon-filled" : ""}`}
-                      >
-                        {active ? "check_box" : "check_box_outline_blank"}
-                      </span>
-                      {label}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="bg-surface-container-high/60 p-4 rounded-xl space-y-2">
-            <div className="flex items-center gap-2 text-primary font-semibold text-label-md">
-              <span className="material-symbols-outlined text-[18px]">verified_user</span>
-              <span>Provenance Pledge</span>
-            </div>
-            <p className="text-caption text-on-surface-variant">
-              Each artisan&apos;s identity and studio methods are independently vetted before listing.
-            </p>
-          </div>
-        </aside>
+        <FilterSidebar
+          activeCategory={activeCategory}
+          activePill={activePill}
+          pills={FILTER_PILLS}
+          tags={CATEGORY_TAGS}
+          onToggleCategory={toggleCategory}
+          onSelectPill={selectPill}
+        />
 
         {/* Results */}
         <section className="lg:col-span-9" aria-live="polite">
@@ -501,38 +422,7 @@ export default function ProductsPage() {
               </div>
 
               {/* Pagination */}
-              <div className="mt-6 bg-surface-container-lowest rounded-xl shadow-sm p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <span className="text-caption text-on-surface-variant">
-                  Showing{" "}
-                  <span className="font-semibold text-on-surface">
-                    {items.length} of {total}
-                  </span>{" "}
-                  handcrafted objects
-                </span>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => changePage(Math.max(1, page - 1))}
-                    disabled={page <= 1}
-                    className="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container text-label-sm flex items-center gap-1 transition-colors disabled:opacity-40 disabled:pointer-events-none"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">arrow_back</span>
-                    <span>Previous</span>
-                  </button>
-                  <span className="px-2 text-label-sm text-on-surface font-semibold">
-                    {page} / {totalPages}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => changePage(Math.min(totalPages, page + 1))}
-                    disabled={page >= totalPages}
-                    className="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container text-label-sm flex items-center gap-1 transition-colors disabled:opacity-40 disabled:pointer-events-none"
-                  >
-                    <span>Next</span>
-                    <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-                  </button>
-                </div>
-              </div>
+              <Pagination page={page} totalPages={totalPages} total={total} count={items.length} onChange={changePage} />
             </>
           )}
         </section>

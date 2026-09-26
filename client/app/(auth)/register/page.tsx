@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { AuthShell, type AuthMode } from "@/components/auth/AuthShell";
+import { Button } from "@/components/ui/components/Button";
+import { Input } from "@/components/ui/components/Input";
+import { AuthShell, type AuthMode } from "@/components/auth/components/AuthShell";
 import { useAuth } from "@/components/auth/AuthContext";
 import { authService } from "@/services/auth.service";
 

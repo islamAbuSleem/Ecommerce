@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import { Card } from "@/components/ui/Card";
-import { Input } from "@/components/ui/Input";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Container } from "@/components/layout/Container";
-import { ProductCard } from "@/components/products/ProductCard";
+import { Button } from "@/components/ui/components/Button";
+import { Badge } from "@/components/ui/components/Badge";
+import { Card } from "@/components/ui/components/Card";
+import { Input } from "@/components/ui/components/Input";
+import { SectionHeading } from "@/components/ui/components/SectionHeading";
+import { Container } from "@/components/layout/components/Container";
+import { ProductCard } from "@/components/products/components/ProductCard";
 
 const mockProduct = {
   id: "1",
