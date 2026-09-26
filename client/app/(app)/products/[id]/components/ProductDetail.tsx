@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ApiError } from "@/services/api";
+import { useCart } from "@/components/cart/CartContext";
 import { productsService, type Product } from "@/services/products.service";
 import { Gallery } from "./Gallery";
 import { BuyBox } from "./BuyBox";
@@ -12,11 +14,14 @@ import { SpecsAccordion } from "./SpecsAccordion";
 import { Icon } from "@/components/ui/components/Icon";
 
 export function ProductDetail({ id }: { id: string }) {
+  const router = useRouter();
+  const { add } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isNotFound, setIsNotFound] = useState(false);
   const [retryKey, setRetryKey] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const inStock = (product?.stock ?? 0) > 0;
 
   useEffect(() => {
     let cancelled = false;
@@ -169,8 +174,9 @@ export function ProductDetail({ id }: { id: string }) {
                 <button
                   type="button"
                   aria-label="Decrease quantity"
+                  disabled={product.stock <= 0}
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="w-8 h-8 rounded-md flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors"
+                  className="w-8 h-8 rounded-md flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors disabled:opacity-40"
                 >
                   <Icon size="md">remove</Icon>
                 </button>
@@ -178,20 +184,23 @@ export function ProductDetail({ id }: { id: string }) {
                 <button
                   type="button"
                   aria-label="Increase quantity"
-                  onClick={() => setQuantity((q) => Math.min(product.stock > 0 ? product.stock : 1, q + 1))}
-                  className="w-8 h-8 rounded-md flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors"
+                  disabled={product.stock <= 0 || quantity >= product.stock}
+                  onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
+                  className="w-8 h-8 rounded-md flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors disabled:opacity-40"
                 >
                   <Icon size="md">add</Icon>
                 </button>
               </div>
               <button
                 type="button"
-                disabled
-                title="Checkout is coming soon"
+                disabled={!inStock}
+                onClick={() => {
+                  if (product) void add(product.id, quantity).then(() => router.push("/checkout"));
+                }}
                 className="flex-1 h-11 px-4 rounded-lg bg-primary text-on-primary text-label-md flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98] disabled:opacity-50"
               >
                 <Icon size="md">shopping_bag</Icon>
-                <span>Available soon</span>
+                <span>Add to Cart</span>
               </button>
             </div>
           </div>

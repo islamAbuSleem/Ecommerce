@@ -1,4 +1,8 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import type { Product } from "@/services/products.service";
+import { useCart } from "@/components/cart/CartContext";
 import { RatingStars } from "@/components/products/components/RatingStars";
 import { isVerifiedSeller } from "@/components/products/sellers";
 import { Icon } from "@/components/ui/components/Icon";
@@ -10,6 +14,8 @@ type Props = {
 };
 
 export function BuyBox({ product, quantity, setQuantity }: Props) {
+  const router = useRouter();
+  const { add } = useCart();
   const inStock = (product?.stock ?? 0) > 0;
   const lowStock = product != null && product.stock > 0 && product.stock <= 5;
 
@@ -79,8 +85,8 @@ export function BuyBox({ product, quantity, setQuantity }: Props) {
           <button
             type="button"
             aria-label="Increase quantity"
-            disabled={!inStock}
-            onClick={() => setQuantity((q) => Math.min(product.stock > 0 ? product.stock : 1, q + 1))}
+            disabled={quantity >= product.stock}
+            onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
             className="w-8 h-8 rounded flex items-center justify-center text-on-surface hover:bg-surface-container-lowest transition-colors disabled:opacity-40"
           >
             <Icon size="md">add</Icon>
@@ -93,12 +99,14 @@ export function BuyBox({ product, quantity, setQuantity }: Props) {
 
       <button
         type="button"
-        disabled
-        title="Checkout is coming soon"
+        disabled={!inStock}
+        onClick={() => {
+          void add(product.id, quantity).then(() => router.push("/checkout"));
+        }}
         className="w-full h-11 px-4 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-label-md flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.99] disabled:opacity-50"
       >
         <Icon size="md">shopping_bag</Icon>
-        <span>Available soon</span>
+        <span>Add to Cart</span>
       </button>
 
       <div className="bg-surface-container-low rounded-lg p-4 flex flex-col gap-3">
