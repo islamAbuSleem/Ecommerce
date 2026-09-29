@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/components/auth/AuthContext";
+import { Icon } from "@/components/ui/components/Icon";
 
 const METRICS: { value: string; label: string; accent?: string }[] = [
   { value: "Direct-from-maker", label: "Independent Studios" },
@@ -21,7 +22,7 @@ export function Hero() {
       <div className="relative z-10 grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
         <div className="flex flex-col items-start lg:col-span-7">
           <span className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-primary-fixed px-3 py-1 text-label-sm text-on-primary-fixed">
-            <span className="material-symbols-outlined text-[16px] text-primary">auto_awesome</span>
+            <Icon size="sm" className="text-primary">auto_awesome</Icon>
             <span>Curated Edition Autumn / Winter 2025</span>
           </span>
           <h1 className="text-headline-lg-mobile tracking-tight text-on-surface lg:text-headline-lg">
@@ -40,13 +41,13 @@ export function Hero() {
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-label-md text-on-primary shadow-sm transition-all hover:bg-primary-container active:scale-95"
             >
               <span>Explore Collections</span>
-              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              <Icon size="md">arrow_forward</Icon>
             </Link>
             <Link
               href="/#spotlight"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-surface-container-low px-5 py-3 text-label-md text-on-surface shadow-sm transition-all hover:bg-surface-container"
             >
-              <span className="material-symbols-outlined text-[18px] text-primary">storefront</span>
+              <Icon size="md" className="text-primary">storefront</Icon>
               <span>Meet Featured Artisans</span>
             </Link>
           </div>
@@ -62,9 +63,9 @@ export function Hero() {
         <div className="relative lg:col-span-5">
           <div className="relative rounded-2xl bg-surface-container-lowest p-3 shadow-md">
             <div className="absolute -top-3 -left-3 z-20 flex items-center gap-1.5 rounded-full bg-surface-container-lowest px-3 py-1 text-label-sm font-semibold text-on-surface shadow-md">
-              <span className="material-symbols-outlined text-[16px] text-tertiary-container">
+              <Icon size="sm" className="text-tertiary-container">
                 verified_user
-              </span>
+              </Icon>
               <span>Staff Pick Collection</span>
             </div>
             <div className="group relative aspect-square overflow-hidden rounded-xl bg-surface-container">
@@ -96,7 +97,7 @@ export function Hero() {
             </div>
             <div className="flex items-center justify-between px-1 pt-3 text-on-surface-variant">
               <span className="flex items-center gap-1.5 text-caption">
-                <span className="material-symbols-outlined text-[15px] text-primary">handshake</span>
+                <Icon size="sm" className="text-primary">handshake</Icon>
                 Direct Studio Payout Guaranteed
               </span>
               <Link
@@ -104,7 +105,7 @@ export function Hero() {
                 aria-label="Browse the staff pick collection"
                 className="rounded-lg bg-primary p-2 text-on-primary transition-colors hover:bg-primary-container"
               >
-                <span className="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+                <Icon size="md">add_shopping_cart</Icon>
               </Link>
             </div>
           </div>

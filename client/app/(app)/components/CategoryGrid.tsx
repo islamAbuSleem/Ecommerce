@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Icon } from "@/components/ui/components/Icon";
 
 // Static config mirroring the desktop mock taxonomy. Labels are the
 // category query values sent to /products (exact-match on the BE).
@@ -26,7 +27,7 @@ export function CategoryGrid() {
           className="flex items-center gap-1 text-label-md text-primary transition-colors hover:text-on-primary-fixed-variant"
         >
           <span>View All Disciplines</span>
-          <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+          <Icon size="sm">chevron_right</Icon>
         </Link>
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
@@ -37,7 +38,7 @@ export function CategoryGrid() {
             className="group flex flex-col items-center text-center rounded-2xl bg-surface-container-lowest p-5 shadow-sm transition-all hover:bg-surface-container-low hover:shadow-md"
           >
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-surface-container text-on-surface transition-colors group-hover:bg-primary group-hover:text-on-primary">
-              <span className="material-symbols-outlined text-[24px]">{icon}</span>
+              <Icon size="lg">{icon}</Icon>
             </div>
             <span className="text-headline-sm text-on-surface transition-colors group-hover:text-primary">
               {label}

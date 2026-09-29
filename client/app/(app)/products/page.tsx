@@ -16,6 +16,7 @@ import {
   type Product,
   type ProductSort,
 } from "@/services/products.service";
+import { Icon } from "@/components/ui/components/Icon";
 
 const FILTER_PILLS: { id: string; label: string; params: Partial<ListParams> }[] = [
   { id: "all", label: "All Items", params: {} },
@@ -199,11 +200,11 @@ function ProductsPageContent() {
         <Link href="/" className="hover:text-primary transition-colors">
           Home
         </Link>
-        <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+        <Icon size="xs">chevron_right</Icon>
         <Link href="/products" className="hover:text-primary transition-colors">
           Explore
         </Link>
-        <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+        <Icon size="xs">chevron_right</Icon>
         <span className="text-on-surface font-medium">All Products</span>
       </nav>
 
@@ -240,7 +241,7 @@ function ProductsPageContent() {
                         : "text-on-surface-variant hover:text-on-surface"
                     }`}
                   >
-                    <span className="material-symbols-outlined text-[20px]">{icon}</span>
+                    <Icon size="md">{icon}</Icon>
                   </button>
                 );
               })}
@@ -259,9 +260,9 @@ function ProductsPageContent() {
                   </option>
                 ))}
               </select>
-              <span className="material-symbols-outlined text-[18px] text-outline pointer-events-none">
+              <Icon size="md" className="text-outline pointer-events-none">
                 arrow_drop_down
-              </span>
+              </Icon>
             </div>
           </div>
         </div>
@@ -282,7 +283,7 @@ function ProductsPageContent() {
               onClick={() => setQuery("")}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-primary transition-colors"
             >
-              <span className="material-symbols-outlined text-[20px]">close</span>
+              <Icon size="md">close</Icon>
             </button>
           )}
         </div>
@@ -313,7 +314,7 @@ function ProductsPageContent() {
         {/* Category tag chips */}
         <div className="flex items-center gap-2 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 py-0.5">
           <span className="text-caption text-outline flex items-center gap-1 uppercase tracking-wider pr-1 shrink-0">
-            <span className="material-symbols-outlined text-[14px]">category</span>
+            <Icon size="xs">category</Icon>
             Tags
           </span>
           {CATEGORY_TAGS.map(({ id, label }) => {
@@ -358,7 +359,7 @@ function ProductsPageContent() {
                 onClick={() => selectPill("all")}
                 className="hover:text-primary transition-colors ml-1"
               >
-                <span className="material-symbols-outlined text-[14px] align-middle">close</span>
+                <Icon size="xs" className="align-middle">close</Icon>
               </button>
             </span>
           )}
@@ -371,7 +372,7 @@ function ProductsPageContent() {
                 onClick={() => toggleCategory(activeCategory)}
                 className="hover:text-primary transition-colors ml-1"
               >
-                <span className="material-symbols-outlined text-[14px] align-middle">close</span>
+                <Icon size="xs" className="align-middle">close</Icon>
               </button>
             </span>
           )}
@@ -390,7 +391,7 @@ function ProductsPageContent() {
                 }}
                 className="hover:text-primary transition-colors ml-1"
               >
-                <span className="material-symbols-outlined text-[14px] align-middle">close</span>
+                <Icon size="xs" className="align-middle">close</Icon>
               </button>
             </span>
           )}
@@ -403,7 +404,7 @@ function ProductsPageContent() {
                 onClick={() => changeMaxPrice(null)}
                 className="hover:text-primary transition-colors ml-1"
               >
-                <span className="material-symbols-outlined text-[14px] align-middle">close</span>
+                <Icon size="xs" className="align-middle">close</Icon>
               </button>
             </span>
           )}
@@ -421,7 +422,7 @@ function ProductsPageContent() {
       <div className="lg:hidden flex items-center justify-between px-3.5 py-2.5 mb-4 rounded-xl bg-surface-container-low text-on-surface shadow-sm">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-            <span className="material-symbols-outlined text-[16px]">verified_user</span>
+            <Icon size="sm">verified_user</Icon>
           </div>
           <div className="flex flex-col">
             <span className="text-label-sm leading-tight text-on-surface">Aura Purchase Protection</span>
@@ -430,7 +431,7 @@ function ProductsPageContent() {
             </span>
           </div>
         </div>
-        <span className="material-symbols-outlined text-[18px] text-outline">chevron_right</span>
+        <Icon size="md" className="text-outline">chevron_right</Icon>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
@@ -452,7 +453,7 @@ function ProductsPageContent() {
             <SkeletonGrid />
           ) : error ? (
             <div className="flex flex-col items-center gap-3 bg-surface-container-lowest rounded-xl shadow-sm p-10 text-center">
-              <span className="material-symbols-outlined text-[32px] text-outline">error</span>
+              <Icon size="xl" className="text-outline">error</Icon>
               <p className="text-headline-sm text-on-surface">Something went wrong</p>
               <p className="text-body-sm text-on-surface-variant">{error}</p>
               <button
@@ -469,7 +470,7 @@ function ProductsPageContent() {
             </div>
           ) : items.length === 0 ? (
             <div className="flex flex-col items-center gap-3 bg-surface-container-lowest rounded-xl shadow-sm p-10 text-center">
-              <span className="material-symbols-outlined text-[32px] text-outline">search_off</span>
+              <Icon size="xl" className="text-outline">search_off</Icon>
               <p className="text-headline-sm text-on-surface">No products found</p>
               <p className="text-body-sm text-on-surface-variant">
                 Try a different search term or clear your filters.

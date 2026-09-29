@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Icon } from "@/components/ui/components/Icon";
 
 type Props = {
   id?: string;
@@ -46,7 +47,7 @@ export function PasswordField({
           className="absolute right-2.5 top-2 p-1 text-on-surface-variant hover:text-on-surface"
           aria-label="Toggle password visibility"
         >
-          <span className="material-symbols-outlined text-lg">{showPassword ? "visibility_off" : "visibility"}</span>
+          <Icon size="md">{showPassword ? "visibility_off" : "visibility"}</Icon>
         </button>
       </div>
     </div>

@@ -5,6 +5,9 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthCoreModule } from './auth-core/auth-core.module';
 import { AuthModule } from './auth/auth.module';
 import { ProductsModule } from './products/products.module';
+import { CartModule } from './cart/cart.module';
+import { OrdersModule } from './orders/orders.module';
+import { SellerModule } from './seller/seller.module';
 import { JwtAuthGuard } from './auth-core/jwt-auth.guard';
 
 @Module({
@@ -16,6 +19,9 @@ import { JwtAuthGuard } from './auth-core/jwt-auth.guard';
     AuthCoreModule,
     AuthModule,
     ProductsModule,
+    CartModule,
+    OrdersModule,
+    SellerModule,
   ],
   controllers: [],
   providers: [

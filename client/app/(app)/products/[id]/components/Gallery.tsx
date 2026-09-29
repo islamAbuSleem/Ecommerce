@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { WishlistButton } from "@/components/products/components/WishlistButton";
+import { Icon } from "@/components/ui/components/Icon";
 
 export function Gallery({ images, name }: { images: string[]; name: string }) {
   const [selected, setSelected] = useState(0);
@@ -60,7 +61,7 @@ export function Gallery({ images, name }: { images: string[]; name: string }) {
           </button>
         ) : (
           <span className="flex items-center gap-2 text-caption text-outline">
-            <span className="material-symbols-outlined text-[20px]">image</span>
+            <Icon size="md">image</Icon>
             No image available
           </span>
         )}
@@ -73,9 +74,9 @@ export function Gallery({ images, name }: { images: string[]; name: string }) {
             title="Copy product link"
             className="pointer-events-auto h-7 pl-2 pr-2.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-md flex items-center gap-1 text-on-surface-variant shadow-sm active:scale-95 transition-all hover:text-on-surface"
           >
-            <span aria-hidden="true" className="material-symbols-outlined text-[16px]">
+            <Icon size="sm" aria-hidden="true">
               {copied ? "check" : "share"}
-            </span>
+            </Icon>
             <span aria-live="polite" className="text-label-sm">
               {copied ? "Copied" : shareFailed ? "Failed" : "Share"}
             </span>
@@ -123,7 +124,7 @@ export function Gallery({ images, name }: { images: string[]; name: string }) {
             />
           ) : (
             <span className="absolute inset-0 flex items-center justify-center gap-2 text-caption text-outline">
-              <span className="material-symbols-outlined text-[20px]">image</span>
+              <Icon size="md">image</Icon>
               No image available
             </span>
           )}
@@ -134,7 +135,7 @@ export function Gallery({ images, name }: { images: string[]; name: string }) {
           aria-label="Close zoom"
           className="absolute top-2 right-2 w-8 h-8 rounded-full bg-surface-container-lowest/90 backdrop-blur-md flex items-center justify-center text-on-surface-variant shadow-sm active:scale-90 transition-all hover:text-on-surface"
         >
-          <span className="material-symbols-outlined text-[20px]" aria-hidden="true">close</span>
+          <Icon size="md" aria-hidden="true">close</Icon>
         </button>
       </dialog>
     </div>

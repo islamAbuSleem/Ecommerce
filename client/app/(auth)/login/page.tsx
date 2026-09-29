@@ -10,6 +10,7 @@ import { EmailField } from "@/components/auth/components/EmailField";
 import { PasswordField } from "@/components/auth/components/PasswordField";
 import { useAuth } from "@/components/auth/AuthContext";
 import { authService } from "@/services/auth.service";
+import { Icon } from "@/components/ui/components/Icon";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
 
@@ -146,7 +147,7 @@ export default function LoginPage() {
         >
           {loading ? (
             <>
-              <span className="material-symbols-outlined animate-spin text-base">progress_activity</span>
+              <Icon size="sm" className="animate-spin">progress_activity</Icon>
               <span>Verifying Credentials...</span>
             </>
           ) : (

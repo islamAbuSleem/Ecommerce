@@ -29,6 +29,8 @@ model User {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   products     Product[]
+  cartItems    CartItem[]
+  orders       Order[]
 }
 
 model Product {
@@ -46,8 +48,39 @@ model Product {
   freeShipping Boolean       @default(false)
   sellerId     String
   seller       User          @relation(fields: [sellerId], references: [id], onDelete: Restrict)
+  cartItems    CartItem[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+}
+
+model CartItem {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  qty Int @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([userId, productId])
+}
+
+model Order {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items Json
+  subtotal Float
+  shippingCost Float
+  total Float
+  status String @default("pending")
+  fullName String
+  address String
+  city String
+  zip String
+  country String
+  deliveryMethod String
+  createdAt DateTime @default(now())
 }
 
 generator client {          // "which SDK to build from this schema, and where to put it"
