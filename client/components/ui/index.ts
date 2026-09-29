@@ -3,3 +3,4 @@ export { Card } from "./components/Card";
 export { CardTitle } from "./components/CardTitle";
 export { Badge } from "./components/Badge";
 export { Input } from "./components/Input";
+export { Icon } from "./components/Icon";
