@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/components/auth/AuthContext";
+import { useCart } from "@/components/cart/CartContext";
+import { Icon } from "@/components/ui/components/Icon";
 
 const navItems = [
   { href: "/", label: "Home" },
   { href: "/products", label: "Products" },
-  { href: "/cart", label: "Cart" },
+  { href: "/checkout", label: "Cart" },
   { href: "/seller/dashboard", label: "Dashboard" },
   { href: "/profile", label: "Profile" },
 ];
@@ -15,13 +17,14 @@ const navItems = [
 export function Navbar() {
   const pathname = usePathname();
   const { user, loading, logout } = useAuth();
+  const { count } = useCart();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-surface">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         <Link href="/" className="flex items-center gap-2">
           <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-logo-gradient">
-            <span className="material-symbols-outlined text-white text-[22px]">token</span>
+            <Icon size="lg" className="text-white">token</Icon>
           </span>
           <span className="text-lg font-semibold text-text-darkest">Marketplace</span>
         </Link>
@@ -37,7 +40,17 @@ export function Navbar() {
                   isActive ? "text-accent" : "text-text-dark hover:text-text-primary"
                 }`}
               >
-                {item.label}
+                <span className="inline-flex items-center gap-1.5">
+                  {item.label}
+                  {item.href === "/checkout" && count > 0 && (
+                    <span
+                      aria-label={`${count} items in cart`}
+                      className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-on-primary"
+                    >
+                      {count > 99 ? "99+" : count}
+                    </span>
+                  )}
+                </span>
               </Link>
             );
           })}

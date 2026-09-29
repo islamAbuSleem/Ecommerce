@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ProductCard } from "@/components/products/components/ProductCard";
 import { isVerifiedSeller } from "@/components/products/sellers";
 import type { Product } from "@/services/products.service";
+import { Icon } from "@/components/ui/components/Icon";
 
 // Text-only pills (no emojis). Labels map to client-side filters over the
 // top-rated feed so they stay functional without new BE query params.
@@ -70,7 +71,7 @@ export function TrendingSection({ products, loading, error, activePill, onPillCh
         </div>
       ) : error ? (
         <div className="flex flex-col items-center gap-3 rounded-xl bg-surface-container-lowest p-10 text-center shadow-sm">
-          <span className="material-symbols-outlined text-[32px] text-outline">error</span>
+          <Icon size="xl" className="text-outline">error</Icon>
           <p className="text-headline-sm text-on-surface">Could not load trending works</p>
           <p className="text-body-sm text-on-surface-variant">{error}</p>
           <button
@@ -83,7 +84,7 @@ export function TrendingSection({ products, loading, error, activePill, onPillCh
         </div>
       ) : products.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-xl bg-surface-container-lowest p-10 text-center shadow-sm">
-          <span className="material-symbols-outlined text-[32px] text-outline">search_off</span>
+          <Icon size="xl" className="text-outline">search_off</Icon>
           <p className="text-headline-sm text-on-surface">No trending works for this filter</p>
           <p className="text-body-sm text-on-surface-variant">Try a different filter.</p>
         </div>
@@ -115,7 +116,7 @@ export function TrendingSection({ products, loading, error, activePill, onPillCh
           className="inline-flex items-center gap-2 rounded-lg bg-surface-container-lowest px-5 py-2.5 text-label-md text-on-surface shadow-sm transition-colors hover:bg-surface-container"
         >
           <span>View all trending</span>
-          <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+          <Icon size="md">arrow_forward</Icon>
         </Link>
       </div>
     </section>
