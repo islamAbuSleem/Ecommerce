@@ -11,6 +11,23 @@ export class OrdersService {
     express: 12,
   };
 
+  async list(userId: string, limit?: string) {
+    try {
+      const parsed = limit ? Number(limit) : 50;
+      const take = Number.isFinite(parsed) ? Math.min(Math.max(1, Math.trunc(parsed)), 100) : 50;
+      return await this.prisma.order.findMany({
+        where: { userId },
+        orderBy: { createdAt: 'desc' },
+        take,
+      });
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to fetch orders');
+    }
+  }
+
   async create(userId: string, dto: CreateOrderDto) {
     try {
       return await this.prisma.$transaction(async (tx) => {

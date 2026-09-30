@@ -88,6 +88,13 @@ export function ConfirmationView({ orderId }: Props) {
         <Icon size="md">shopping_bag</Icon>
         Continue shopping
       </Link>
+      <Link
+        href={`/orders/${orderId}`}
+        className="inline-flex items-center gap-1.5 text-label-sm text-on-surface-variant transition-colors hover:text-primary"
+      >
+        <Icon size="sm">receipt_long</Icon>
+        View in your orders
+      </Link>
     </div>
   );
 }
