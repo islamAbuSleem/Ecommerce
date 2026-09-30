@@ -447,15 +447,19 @@ export class AdminService {
   /**
    * Daily orders-over-time series, zero-padded so the chart has contiguous days.
    *
-   * `Order.createdAt` is `TIMESTAMP(3)` — zoneless — so `date_trunc` buckets by
-   * the *database session* timezone, while the zero-padding below walks days in
-   * the **Node process** timezone. When those differ, the keys never match and
-   * every bucket after the first comes back zero.
+   * `Order.createdAt` is `TIMESTAMP(3)` — zoneless — holding the UTC instant as
+   * a naive value, while the zero-padding below reads days in the **Node
+   * process** timezone. Bucketing on the raw value would split orders across
+   * different days depending on the DB session zone.
    *
-   * Bucketing by `current_setting('TimeZone')` would only help if the DB session
-   * happened to match Node, which is exactly the case that already worked, so
-   * it is a no-op in practice. Pass the process timezone in and interpolate it
-   * instead, so the two sides agree by construction.
+   * The conversion needs both halves. `AT TIME ZONE 'UTC'` first reads the
+   * stored naive value as the UTC instant it is, and the second `AT TIME ZONE`
+   * renders that instant as wall-clock in the process zone, yielding a plain
+   * timestamp. `date_trunc` on a plain timestamp does not consult the session
+   * zone at all, so the bucket keys are exactly the days the padding emits.
+   *
+   * A single `AT TIME ZONE` would leave a `timestamptz`, which `date_trunc`
+   * would then re-truncate in the DB session zone — reintroducing the mismatch.
    */
   private async ordersOverTime(
     start: Date,
@@ -467,7 +471,10 @@ export class AdminService {
     >(
       Prisma.sql`
         SELECT to_char(
-                 date_trunc('day', "createdAt" AT TIME ZONE ${processTimeZone}),
+                 date_trunc(
+                   'day',
+                   ("createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${processTimeZone}
+                 ),
                  'YYYY-MM-DD'
                ) AS day,
                COUNT(*) AS orders,
