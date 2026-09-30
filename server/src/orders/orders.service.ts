@@ -17,18 +17,26 @@ export class OrdersService {
     express: 12,
   };
 
-  async list(userId: string, limit?: string) {
+  async list(userId: string, limit?: string, offset?: string) {
     try {
       const raw = limit?.trim();
       const parsed = raw ? Number(raw) : 50;
       const take = Number.isFinite(parsed)
         ? Math.min(Math.max(1, Math.trunc(parsed)), 100)
         : 50;
-      return await this.prisma.order.findMany({
+      const parsedOffset = offset?.trim() ? Number(offset) : 0;
+      const skip =
+        Number.isFinite(parsedOffset) && parsedOffset > 0
+          ? Math.trunc(parsedOffset)
+          : 0;
+      const rows = await this.prisma.order.findMany({
         where: { userId },
-        orderBy: { createdAt: 'desc' },
-        take,
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        skip,
+        take: take + 1,
       });
+      const hasMore = rows.length > take;
+      return { items: hasMore ? rows.slice(0, take) : rows, hasMore };
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;

@@ -12,6 +12,8 @@ const PAGE_SIZE = 50;
 
 export function OrdersList() {
   const [orders, setOrders] = useState<Order[] | null>(null);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [retryKey, setRetryKey] = useState(0);
 
@@ -20,9 +22,10 @@ export function OrdersList() {
 
     ordersService
       .list(PAGE_SIZE)
-      .then((next) => {
+      .then((page) => {
         if (cancelled) return;
-        setOrders(next);
+        setOrders(page.items);
+        setHasMore(page.hasMore);
       })
       .catch((err: unknown) => {
         if (cancelled) return;
@@ -39,6 +42,23 @@ export function OrdersList() {
       cancelled = true;
     };
   }, [retryKey]);
+
+  const loadMore = () => {
+    if (loadingMore || orders === null) return;
+    setLoadingMore(true);
+    ordersService
+      .list(PAGE_SIZE, orders.length)
+      .then((page) => {
+        setOrders((prev) => (prev ? [...prev, ...page.items] : prev));
+        setHasMore(page.hasMore);
+      })
+      .catch((err: unknown) => {
+        console.error("[orders/list/more]", err);
+      })
+      .finally(() => {
+        setLoadingMore(false);
+      });
+  };
 
   if (error) {
     return (
@@ -100,12 +120,19 @@ export function OrdersList() {
           <div className="mt-4 hidden lg:block">
             <OrderTable orders={rows} />
           </div>
-          {rows.length >= PAGE_SIZE ? (
-            <p className="mt-4 flex items-center gap-1.5 text-caption text-on-surface-variant">
-              <Icon size="sm" aria-hidden="true">info</Icon>
-              Showing your {PAGE_SIZE} most recent orders. Contact support to look further back.
-            </p>
-          ) : null}
+          {hasMore && (
+            <div className="mt-6 flex justify-center">
+              <button
+                type="button"
+                onClick={loadMore}
+                disabled={loadingMore}
+                className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-label-md text-on-surface transition-colors hover:bg-surface-container disabled:opacity-60"
+              >
+                <Icon size="sm">expand_more</Icon>
+                {loadingMore ? "Loading..." : "Load older orders"}
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>

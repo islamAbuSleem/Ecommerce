@@ -45,10 +45,18 @@ function unwrap<T>(data: SuccessResponse<T>): T {
   return data.data;
 }
 
+export type OrderPage = {
+  items: Order[];
+  hasMore: boolean;
+};
+
 export const ordersService = {
-  async list(limit?: number): Promise<Order[]> {
-    const { data } = await api.get<SuccessResponse<Order[]>>("/orders", {
-      params: limit ? { limit } : undefined,
+  async list(limit?: number, offset?: number): Promise<OrderPage> {
+    const params: Record<string, number> = {};
+    if (limit) params.limit = limit;
+    if (offset) params.offset = offset;
+    const { data } = await api.get<SuccessResponse<OrderPage>>("/orders", {
+      params: Object.keys(params).length > 0 ? params : undefined,
     });
     return unwrap(data);
   },
