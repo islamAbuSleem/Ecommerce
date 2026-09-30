@@ -447,22 +447,27 @@ export class AdminService {
   /**
    * Daily orders-over-time series, zero-padded so the chart has contiguous days.
    *
-   * `Order.createdAt` is `TIMESTAMP(3)` — zoneless — so a bare `date_trunc`
-   * buckets by the *database* session timezone, while the padding below walks
-   * local days in the Node process. On a non-UTC deployment those disagree and
-   * the trailing buckets come back empty. Converting to `current_setting('TimeZone')`
-   * first makes Postgres bucket on the same wall-clock the padding assumes.
+   * `Order.createdAt` is `TIMESTAMP(3)` — zoneless — so `date_trunc` buckets by
+   * the *database session* timezone, while the zero-padding below walks days in
+   * the **Node process** timezone. When those differ, the keys never match and
+   * every bucket after the first comes back zero.
+   *
+   * Bucketing by `current_setting('TimeZone')` would only help if the DB session
+   * happened to match Node, which is exactly the case that already worked, so
+   * it is a no-op in practice. Pass the process timezone in and interpolate it
+   * instead, so the two sides agree by construction.
    */
   private async ordersOverTime(
     start: Date,
     days: number,
   ): Promise<{ day: string; orders: number; gmv: number }[]> {
+    const processTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const rows = await this.prisma.$queryRaw<
       { day: string; orders: number; gmv: number }[]
     >(
       Prisma.sql`
         SELECT to_char(
-                 date_trunc('day', "createdAt" AT TIME ZONE current_setting('TimeZone')),
+                 date_trunc('day', "createdAt" AT TIME ZONE ${processTimeZone}),
                  'YYYY-MM-DD'
                ) AS day,
                COUNT(*) AS orders,
