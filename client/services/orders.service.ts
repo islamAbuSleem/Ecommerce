@@ -32,6 +32,7 @@ export type Order = {
   country?: string;
   items: OrderItem[];
   createdAt?: string;
+  productImages?: Record<string, string | null>;
 };
 
 type SuccessResponse<T> = {
