@@ -22,12 +22,18 @@ export class AuthService {
       throw new ConflictException('Email already registered');
     }
     const hashed = await bcrypt.hash(dto.password, 10);
+    // A seller registration is an *application*, not an approved account: it must
+    // land in the admin review queue. Buyers have no seller status at all, so
+    // `sellerStatus` stays NULL for them. `assertApprovedSeller` then blocks the
+    // account until an admin flips `sellerStatus` to 'approved'.
+    const sellerStatus = dto.role === 'seller' ? 'pending' : null;
     const user = await this.prisma.user.create({
       data: {
         email: dto.email,
         passwordHash: hashed,
         fullName: dto.fullName,
         role: dto.role,
+        sellerStatus,
       },
       select: { id: true, email: true, fullName: true, role: true, sellerStatus: true },
     });
