@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
@@ -8,14 +8,29 @@ import { AuthenticatedUser } from '../common/interfaces/authenticated-user.inter
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
+  @Get()
+  async list(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query('limit') limit?: string,
+  ) {
+    const data = await this.ordersService.list(user.userId, limit);
+    return { success: true, data };
+  }
+
   @Post()
-  async create(@CurrentUser() user: AuthenticatedUser, @Body() dto: CreateOrderDto) {
+  async create(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: CreateOrderDto,
+  ) {
     const data = await this.ordersService.create(user.userId, dto);
     return { success: true, data };
   }
 
   @Get(':id')
-  async findOne(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string) {
+  async findOne(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+  ) {
     const data = await this.ordersService.findOne(user.userId, id);
     return { success: true, data };
   }

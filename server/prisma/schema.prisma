@@ -87,6 +87,8 @@ model Order {
   country String
   deliveryMethod String
   createdAt DateTime @default(now())
+
+  @@index([userId, createdAt(sort: Desc)])
 }
 
 generator client {          // "which SDK to build from this schema, and where to put it"
