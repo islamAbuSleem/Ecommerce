@@ -1,4 +1,10 @@
-import { BadRequestException, HttpException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 
@@ -14,7 +20,9 @@ export class OrdersService {
   async list(userId: string, limit?: string) {
     try {
       const parsed = limit ? Number(limit) : 50;
-      const take = Number.isFinite(parsed) ? Math.min(Math.max(1, Math.trunc(parsed)), 100) : 50;
+      const take = Number.isFinite(parsed)
+        ? Math.min(Math.max(1, Math.trunc(parsed)), 100)
+        : 50;
       return await this.prisma.order.findMany({
         where: { userId },
         orderBy: { createdAt: 'desc' },
@@ -34,7 +42,15 @@ export class OrdersService {
         const cartItems = await tx.cartItem.findMany({
           where: { userId },
           include: {
-            product: { select: { id: true, name: true, price: true, images: true, stock: true } },
+            product: {
+              select: {
+                id: true,
+                name: true,
+                price: true,
+                images: true,
+                stock: true,
+              },
+            },
           },
           orderBy: { createdAt: 'asc' },
         });
@@ -43,10 +59,14 @@ export class OrdersService {
         }
         for (const item of cartItems) {
           if (item.product.stock <= 0) {
-            throw new BadRequestException(`Product ${item.product.name} out of stock`);
+            throw new BadRequestException(
+              `Product ${item.product.name} out of stock`,
+            );
           }
           if (item.qty > item.product.stock) {
-            throw new BadRequestException(`Only ${item.product.stock} items in stock for ${item.product.name}`);
+            throw new BadRequestException(
+              `Only ${item.product.stock} items in stock for ${item.product.name}`,
+            );
           }
         }
         const items = cartItems.map((item) => ({
@@ -55,9 +75,13 @@ export class OrdersService {
           price: item.product.price,
           qty: item.qty,
         }));
-        const rawSubtotal = items.reduce((acc, item) => acc + item.price * item.qty, 0);
+        const rawSubtotal = items.reduce(
+          (acc, item) => acc + item.price * item.qty,
+          0,
+        );
         const subtotal = Math.round(rawSubtotal * 100) / 100;
-        const shippingCost = OrdersService.DELIVERY_PRICES[dto.deliveryMethod] ?? 0;
+        const shippingCost =
+          OrdersService.DELIVERY_PRICES[dto.deliveryMethod] ?? 0;
         const total = Math.round((subtotal + shippingCost) * 100) / 100;
         const order = await tx.order.create({
           data: {

@@ -44,7 +44,7 @@ export function OrderTable({ orders }: { orders: Order[] }) {
               <td className="px-4 py-3 text-right">
                 <Link
                   href={`/orders/${order.id}`}
-                  className="inline-flex items-center gap-1 text-label-sm text-primary transition-colors hover:text-primary-fixed-variant"
+                  className="inline-flex items-center gap-1 text-label-sm text-primary transition-colors hover:text-on-primary-fixed-variant"
                 >
                   Details
                   <Icon size="sm">chevron_right</Icon>
