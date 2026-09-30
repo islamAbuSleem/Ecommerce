@@ -100,6 +100,12 @@ export function OrdersList() {
           <div className="mt-4 hidden lg:block">
             <OrderTable orders={rows} />
           </div>
+          {rows.length >= PAGE_SIZE ? (
+            <p className="mt-4 flex items-center gap-1.5 text-caption text-on-surface-variant">
+              <Icon size="sm" aria-hidden="true">info</Icon>
+              Showing your {PAGE_SIZE} most recent orders. Contact support to look further back.
+            </p>
+          ) : null}
         </>
       )}
     </div>

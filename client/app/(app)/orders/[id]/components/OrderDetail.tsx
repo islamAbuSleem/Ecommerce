@@ -26,6 +26,7 @@ type LoadState =
 
 export function OrderDetail({ orderId }: Props) {
   const [state, setState] = useState<LoadState>({ status: "loading" });
+  const [images, setImages] = useState<Record<string, string | null>>({});
   const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
@@ -35,9 +36,11 @@ export function OrderDetail({ orderId }: Props) {
       .getById(orderId)
       .then(async (order) => {
         if (cancelled) return;
-        const images = await loadProductImages(order);
+        setImages({});
+        setState({ status: "ready", order, images: {} });
+        const resolved = await loadProductImages(order);
         if (cancelled) return;
-        setState({ status: "ready", order, images });
+        setImages(resolved);
       })
       .catch((err: unknown) => {
         if (cancelled) return;
@@ -94,7 +97,7 @@ export function OrderDetail({ orderId }: Props) {
     );
   }
 
-  const { order, images } = state;
+  const { order } = state;
   const itemCount = totalQuantity(order);
 
   return (
@@ -136,7 +139,11 @@ export function OrderDetail({ orderId }: Props) {
                   />
                 ) : (
                   <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-surface-container text-outline">
-                    <Icon size="lg">image</Icon>
+                    {line.productId && !(line.productId in images) ? (
+                      <span className="h-6 w-6 animate-pulse rounded bg-surface-container-high" />
+                    ) : (
+                      <Icon size="lg">image</Icon>
+                    )}
                   </span>
                 )}
                 <div className="min-w-0 flex-1">

@@ -19,7 +19,8 @@ export class OrdersService {
 
   async list(userId: string, limit?: string) {
     try {
-      const parsed = limit ? Number(limit) : 50;
+      const raw = limit?.trim();
+      const parsed = raw ? Number(raw) : 50;
       const take = Number.isFinite(parsed)
         ? Math.min(Math.max(1, Math.trunc(parsed)), 100)
         : 50;
