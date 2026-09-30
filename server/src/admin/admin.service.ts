@@ -65,7 +65,10 @@ type AdminAccount = {
 export const PLATFORM_LOW_STOCK_THRESHOLD = 5;
 
 /** `range` query value -> window length in days. `all` has no cutoff. */
-const ANALYTICS_WINDOW_DAYS: Record<Exclude<AdminAnalyticsRange, 'all'>, number> = {
+const ANALYTICS_WINDOW_DAYS: Record<
+  Exclude<AdminAnalyticsRange, 'all'>,
+  number
+> = {
   '7d': 7,
   '30d': 30,
   '90d': 90,
@@ -78,7 +81,12 @@ const TOP_SELLERS_LIMIT = 5;
 const LOW_STOCK_ITEMS_LIMIT = 8;
 
 type CategoryGmvRow = { category: string; gmv: number; units: number };
-type TopSellerRow = { sellerId: string; name: string | null; gmv: number; orders: number };
+type TopSellerRow = {
+  sellerId: string;
+  name: string | null;
+  gmv: number;
+  orders: number;
+};
 
 @Injectable()
 export class AdminService {
@@ -291,29 +299,43 @@ export class AdminService {
    * has no commission engine or payments integration yet. The client renders a
    * "not configured" panel in their place.
    */
-  async analytics(userId: string, range: AdminAnalyticsRange = DEFAULT_ADMIN_ANALYTICS_RANGE) {
+  async analytics(
+    userId: string,
+    range: AdminAnalyticsRange = DEFAULT_ADMIN_ANALYTICS_RANGE,
+  ) {
     try {
       await this.assertAdmin(userId);
       const since = AdminService.analyticsRangeStart(range);
 
-      const [agg, approvedSellers, pendingApplications, categories, topSellers, lowStock] =
-        await Promise.all([
-          this.prisma.order.aggregate({
-            where: since ? { createdAt: { gte: since } } : {},
-            _sum: { total: true },
-            _count: true,
-          }),
-          this.prisma.user.count({ where: { role: 'seller', sellerStatus: 'approved' } }),
-          this.prisma.user.count({ where: { role: 'seller', sellerStatus: 'pending' } }),
-          this.categoryGmv(since),
-          this.topSellerGmv(since, TOP_SELLERS_LIMIT),
-          this.platformLowStock(),
-        ]);
+      const [
+        agg,
+        approvedSellers,
+        pendingApplications,
+        categories,
+        topSellers,
+        lowStock,
+      ] = await Promise.all([
+        this.prisma.order.aggregate({
+          where: since ? { createdAt: { gte: since } } : {},
+          _sum: { total: true },
+          _count: true,
+        }),
+        this.prisma.user.count({
+          where: { role: 'seller', sellerStatus: 'approved' },
+        }),
+        this.prisma.user.count({
+          where: { role: 'seller', sellerStatus: 'pending' },
+        }),
+        this.categoryGmv(since),
+        this.topSellerGmv(since, TOP_SELLERS_LIMIT),
+        this.platformLowStock(),
+      ]);
 
       const seriesWindowDays =
-        range === 'all' ? ANALYTICS_SERIES_CAP_DAYS : ANALYTICS_WINDOW_DAYS[range];
-      const seriesStart = new Date();
-      seriesStart.setHours(0, 0, 0, 0);
+        range === 'all'
+          ? ANALYTICS_SERIES_CAP_DAYS
+          : ANALYTICS_WINDOW_DAYS[range];
+      const seriesStart = AdminService.dayStart(new Date());
       seriesStart.setDate(seriesStart.getDate() - (seriesWindowDays - 1));
       const series = await this.ordersOverTime(seriesStart, seriesWindowDays);
 
@@ -328,7 +350,8 @@ export class AdminService {
           pendingApplications,
         },
         series,
-        seriesLabel: range === 'all' ? 'Last 90 days' : `Last ${seriesWindowDays} days`,
+        seriesLabel:
+          range === 'all' ? 'Last 90 days' : `Last ${seriesWindowDays} days`,
         categories,
         topSellers,
         lowStock,
@@ -341,9 +364,18 @@ export class AdminService {
   /** Inclusive lower bound for a date-range, or `null` when the range is `all`. */
   private static analyticsRangeStart(range: AdminAnalyticsRange): Date | null {
     if (range === 'all') return null;
-    const start = new Date();
+    const start = AdminService.dayStart(new Date());
+    // `range` counts the window *including today*, so "30d" is today plus the
+    // 29 preceding days. Subtracting the full width instead would span 31
+    // calendar days, making the KPIs cover one day more than the chart series.
+    start.setDate(start.getDate() - (ANALYTICS_WINDOW_DAYS[range] - 1));
+    return start;
+  }
+
+  /** Midnight local time on the given day, matching how day buckets are cut. */
+  private static dayStart(date: Date): Date {
+    const start = new Date(date);
     start.setHours(0, 0, 0, 0);
-    start.setDate(start.getDate() - ANALYTICS_WINDOW_DAYS[range]);
     return start;
   }
 
@@ -354,7 +386,9 @@ export class AdminService {
    */
   private async categoryGmv(since: Date | null): Promise<CategoryGmvRow[]> {
     const whereSql =
-      since === null ? Prisma.empty : Prisma.sql`WHERE o."createdAt" >= ${since}`;
+      since === null
+        ? Prisma.empty
+        : Prisma.sql`WHERE o."createdAt" >= ${since}`;
     const rows = await this.prisma.$queryRaw<CategoryGmvRow[]>(
       Prisma.sql`
         SELECT p."category" AS category,
@@ -378,9 +412,14 @@ export class AdminService {
   }
 
   /** Top sellers by GMV across the window, resolved to their account name. */
-  private async topSellerGmv(since: Date | null, limit: number): Promise<TopSellerRow[]> {
+  private async topSellerGmv(
+    since: Date | null,
+    limit: number,
+  ): Promise<TopSellerRow[]> {
     const whereSql =
-      since === null ? Prisma.empty : Prisma.sql`WHERE o."createdAt" >= ${since}`;
+      since === null
+        ? Prisma.empty
+        : Prisma.sql`WHERE o."createdAt" >= ${since}`;
     const rows = await this.prisma.$queryRaw<TopSellerRow[]>(
       Prisma.sql`
         SELECT p."sellerId" AS sellerId,
@@ -405,13 +444,27 @@ export class AdminService {
     }));
   }
 
-  /** Daily orders-over-time series, zero-padded so the chart has contiguous days. */
-  private async ordersOverTime(start: Date, days: number): Promise<
-    { day: string; orders: number; gmv: number }[]
-  > {
-    const rows = await this.prisma.$queryRaw<{ day: string; orders: number; gmv: number }[]>(
+  /**
+   * Daily orders-over-time series, zero-padded so the chart has contiguous days.
+   *
+   * `Order.createdAt` is `TIMESTAMP(3)` — zoneless — so a bare `date_trunc`
+   * buckets by the *database* session timezone, while the padding below walks
+   * local days in the Node process. On a non-UTC deployment those disagree and
+   * the trailing buckets come back empty. Converting to `current_setting('TimeZone')`
+   * first makes Postgres bucket on the same wall-clock the padding assumes.
+   */
+  private async ordersOverTime(
+    start: Date,
+    days: number,
+  ): Promise<{ day: string; orders: number; gmv: number }[]> {
+    const rows = await this.prisma.$queryRaw<
+      { day: string; orders: number; gmv: number }[]
+    >(
       Prisma.sql`
-        SELECT to_char(date_trunc('day', "createdAt"), 'YYYY-MM-DD') AS day,
+        SELECT to_char(
+                 date_trunc('day', "createdAt" AT TIME ZONE current_setting('TimeZone')),
+                 'YYYY-MM-DD'
+               ) AS day,
                COUNT(*) AS orders,
                COALESCE(SUM("total"), 0) AS gmv
         FROM "Order"
@@ -452,12 +505,26 @@ export class AdminService {
     threshold: number;
     count: number;
     outOfStockCount: number;
-    items: { id: string; name: string; stock: number; price: number; sellerName: string | null }[];
+    items: {
+      id: string;
+      name: string;
+      stock: number;
+      price: number;
+      sellerName: string | null;
+    }[];
   }> {
     const threshold = PLATFORM_LOW_STOCK_THRESHOLD;
+    // Inclusive of `threshold` and exclusive of zero, matching the seller
+    // dashboard's `gte: 1, lte: LOW_STOCK_THRESHOLD`. Using `lt` here dropped
+    // SKUs sitting at exactly the threshold and made the two views disagree
+    // about the same product.
+    const lowStockWhere = {
+      status: 'active',
+      stock: { gt: 0, lte: threshold },
+    } as const;
     const [items, count, outOfStockCount] = await Promise.all([
       this.prisma.product.findMany({
-        where: { status: 'active', stock: { gt: 0, lt: threshold } },
+        where: lowStockWhere,
         orderBy: [{ stock: 'asc' }, { id: 'asc' }],
         take: LOW_STOCK_ITEMS_LIMIT,
         select: {
@@ -468,7 +535,7 @@ export class AdminService {
           seller: { select: { fullName: true } },
         },
       }),
-      this.prisma.product.count({ where: { status: 'active', stock: { gt: 0, lt: threshold } } }),
+      this.prisma.product.count({ where: lowStockWhere }),
       this.prisma.product.count({ where: { status: 'active', stock: 0 } }),
     ]);
     return {

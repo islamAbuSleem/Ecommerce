@@ -87,6 +87,12 @@ model Order {
   country String
   deliveryMethod String
   createdAt DateTime @default(now())
+
+  // Buyer-scoped order list (#5).
+  @@index([userId, createdAt(sort: Desc)])
+  // The admin analytics window filters on createdAt alone, which the leading
+  // userId index cannot serve.
+  @@index([createdAt])
 }
 
 generator client {          // "which SDK to build from this schema, and where to put it"

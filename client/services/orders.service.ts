@@ -1,5 +1,4 @@
 import { api } from "./api";
-import type { Product } from "./products.service";
 
 export type DeliveryMethod = "standard" | "express";
 
@@ -14,9 +13,9 @@ export type CreateOrderPayload = {
 
 export type OrderItem = {
   productId: string;
+  name: string;
   qty: number;
   price: number;
-  product?: Product | null;
 };
 
 export type Order = {
@@ -26,6 +25,11 @@ export type Order = {
   subtotal?: number;
   shippingCost?: number;
   deliveryMethod?: DeliveryMethod;
+  fullName?: string;
+  address?: string;
+  city?: string;
+  zip?: string;
+  country?: string;
   items: OrderItem[];
   createdAt?: string;
 };
@@ -41,6 +45,13 @@ function unwrap<T>(data: SuccessResponse<T>): T {
 }
 
 export const ordersService = {
+  async list(limit?: number): Promise<Order[]> {
+    const { data } = await api.get<SuccessResponse<Order[]>>("/orders", {
+      params: limit ? { limit } : undefined,
+    });
+    return unwrap(data);
+  },
+
   async create(payload: CreateOrderPayload): Promise<Order> {
     const { data } = await api.post<SuccessResponse<Order>>("/orders", payload);
     return unwrap(data);
