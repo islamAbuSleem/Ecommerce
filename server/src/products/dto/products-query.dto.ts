@@ -24,6 +24,12 @@ export class ProductsQueryDto {
   @Type(() => Number)
   @IsNumber()
   @Min(0)
+  minPrice?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
   maxPrice?: number;
 
   @IsOptional()
@@ -42,6 +48,11 @@ export class ProductsQueryDto {
   @Transform(toBoolean)
   @IsBoolean()
   verifiedSeller?: boolean;
+
+  @IsOptional()
+  @Transform(toBoolean)
+  @IsBoolean()
+  inStock?: boolean;
 
   @IsOptional()
   @IsIn(['newest', 'price-asc', 'price-desc', 'rating'])
