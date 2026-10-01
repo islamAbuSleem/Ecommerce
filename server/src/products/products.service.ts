@@ -18,14 +18,22 @@ export class ProductsService {
         where.OR = [
           { name: { contains: query.q, mode: 'insensitive' } },
           { description: { contains: query.q, mode: 'insensitive' } },
+          { category: { contains: query.q, mode: 'insensitive' } },
           { seller: { fullName: { contains: query.q, mode: 'insensitive' } } },
         ];
       }
       if (query.category) {
-        where.category = query.category;
+        const categories = query.category
+          .split(",")
+          .map((entry) => entry.trim())
+          .filter(Boolean);
+        where.category = categories.length > 1 ? { in: categories } : categories[0];
       }
-      if (query.maxPrice !== undefined) {
-        where.price = { lte: query.maxPrice };
+      if (query.minPrice !== undefined || query.maxPrice !== undefined) {
+        where.price = {
+          ...(query.minPrice !== undefined ? { gte: query.minPrice } : {}),
+          ...(query.maxPrice !== undefined ? { lte: query.maxPrice } : {}),
+        };
       }
       if (query.minRating !== undefined) {
         where.ratingAvg = { gte: query.minRating };
@@ -35,6 +43,9 @@ export class ProductsService {
       }
       if (query.verifiedSeller === true) {
         where.seller = { sellerStatus: 'approved' };
+      }
+      if (query.inStock === true) {
+        where.stock = { gt: 0 };
       }
 
       let orderBy: Prisma.ProductOrderByWithRelationInput[] = [{ createdAt: 'desc' }, { id: 'asc' }];
