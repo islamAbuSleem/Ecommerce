@@ -9,6 +9,9 @@ import { CartModule } from './cart/cart.module';
 import { OrdersModule } from './orders/orders.module';
 import { SellerModule } from './seller/seller.module';
 import { AdminModule } from './admin/admin.module';
+import { CommissionModule } from './commission/commission.module';
+import { PaymentsModule } from './payments/payments.module';
+import { ShippingModule } from './shipping/shipping.module';
 import { JwtAuthGuard } from './auth-core/jwt-auth.guard';
 
 @Module({
@@ -24,6 +27,9 @@ import { JwtAuthGuard } from './auth-core/jwt-auth.guard';
     OrdersModule,
     SellerModule,
     AdminModule,
+    CommissionModule,
+    PaymentsModule,
+    ShippingModule,
   ],
   controllers: [],
   providers: [

@@ -18,6 +18,7 @@ import { CategoryGmvBar } from "./CategoryGmvBar";
 import { TopSellersTable } from "./TopSellersTable";
 import { LowStockWidget } from "./LowStockWidget";
 import { CommissionNotConfigured } from "./CommissionNotConfigured";
+import { CommissionOverview } from "./CommissionOverview";
 
 type RangeDataMap = Partial<Record<AdminAnalyticsRange, AdminAnalytics>>;
 type RangeErrorMap = Partial<Record<AdminAnalyticsRange, string>>;
@@ -169,6 +170,7 @@ export function AdminDashboard() {
         <div className="flex flex-col gap-4 lg:col-span-5">
           <TopSellersTable sellers={topSellers} />
           <LowStockWidget lowStock={lowStock} />
+          <CommissionOverview />
           <CommissionNotConfigured />
         </div>
       </div>
