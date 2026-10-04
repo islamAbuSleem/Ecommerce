@@ -12,8 +12,9 @@ export class OrdersController {
   async list(
     @CurrentUser() user: AuthenticatedUser,
     @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
   ) {
-    const data = await this.ordersService.list(user.userId, limit);
+    const data = await this.ordersService.list(user.userId, limit, offset);
     return { success: true, data };
   }
 

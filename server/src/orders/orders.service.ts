@@ -17,18 +17,26 @@ export class OrdersService {
     express: 12,
   };
 
-  async list(userId: string, limit?: string) {
+  async list(userId: string, limit?: string, offset?: string) {
     try {
       const raw = limit?.trim();
       const parsed = raw ? Number(raw) : 50;
       const take = Number.isFinite(parsed)
         ? Math.min(Math.max(1, Math.trunc(parsed)), 100)
         : 50;
-      return await this.prisma.order.findMany({
+      const parsedOffset = offset?.trim() ? Number(offset) : 0;
+      const skip =
+        Number.isFinite(parsedOffset) && parsedOffset > 0
+          ? Math.trunc(parsedOffset)
+          : 0;
+      const rows = await this.prisma.order.findMany({
         where: { userId },
-        orderBy: { createdAt: 'desc' },
-        take,
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        skip,
+        take: take + 1,
       });
+      const hasMore = rows.length > take;
+      return { items: hasMore ? rows.slice(0, take) : rows, hasMore };
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
@@ -124,12 +132,43 @@ export class OrdersService {
       if (!order) {
         throw new NotFoundException('Order not found');
       }
-      return order;
+      const productIds = this.productIdsFromItems(order.items);
+      const products =
+        productIds.length === 0
+          ? []
+          : await this.prisma.product.findMany({
+              where: { id: { in: productIds } },
+              select: { id: true, images: true },
+            });
+      const productImages: Record<string, string | null> = {};
+      for (const product of products) {
+        productImages[product.id] = product.images[0] ?? null;
+      }
+      for (const productId of productIds) {
+        if (!(productId in productImages)) {
+          productImages[productId] = null;
+        }
+      }
+      return { ...order, productImages };
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
       }
       throw new InternalServerErrorException('Failed to fetch order');
     }
+  }
+
+  private productIdsFromItems(items: unknown): string[] {
+    if (!Array.isArray(items)) {
+      return [];
+    }
+    const ids = new Set<string>();
+    for (const item of items) {
+      const productId = (item as { productId?: unknown } | null)?.productId;
+      if (typeof productId === 'string' && productId.length > 0) {
+        ids.add(productId);
+      }
+    }
+    return Array.from(ids);
   }
 }
