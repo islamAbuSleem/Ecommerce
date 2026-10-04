@@ -49,18 +49,14 @@ export const CHART_COLORS = [
 ];
 
 /**
- * The design's financial panels describe capabilities Aura has not built. Rather
- * than render a live figure or a green check, each is listed as plainly unavailable.
+ * Payouts/settlements are the one financial capability Aura has not built. Rather
+ * than render a live figure or a green check, it is listed as plainly unavailable.
+ * (Commission itself is real and shown in the "Commission collected" panel.)
  */
-export const COMMISSION_UNAVAILABLE: { icon: string; title: string; body: string }[] = [
-  {
-    icon: "account_balance_wallet",
-    title: "Net platform commission",
-    body: "There is no commission engine yet, so no take-rate or net-earnings figure exists to report.",
-  },
+export const PAYOUTS_UNAVAILABLE: { icon: string; title: string; body: string }[] = [
   {
     icon: "currency_exchange",
     title: "Payouts & settlements",
-    body: "Payments (Stripe, then Razorpay) are not integrated, so there is no disbursement schedule or held figure.",
+    body: "Stripe is integrated but not activated (no API credentials configured), and there is no disbursement flow, so there is no held figure or settlement schedule to report.",
   },
 ];

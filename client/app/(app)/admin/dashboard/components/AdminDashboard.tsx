@@ -17,7 +17,7 @@ import { OrdersOverTimeChart } from "./OrdersOverTimeChart";
 import { CategoryGmvBar } from "./CategoryGmvBar";
 import { TopSellersTable } from "./TopSellersTable";
 import { LowStockWidget } from "./LowStockWidget";
-import { CommissionNotConfigured } from "./CommissionNotConfigured";
+import { PayoutsNotConfigured } from "./PayoutsNotConfigured";
 import { CommissionOverview } from "./CommissionOverview";
 
 type RangeDataMap = Partial<Record<AdminAnalyticsRange, AdminAnalytics>>;
@@ -171,7 +171,7 @@ export function AdminDashboard() {
           <TopSellersTable sellers={topSellers} />
           <LowStockWidget lowStock={lowStock} />
           <CommissionOverview />
-          <CommissionNotConfigured />
+          <PayoutsNotConfigured />
         </div>
       </div>
     </div>
