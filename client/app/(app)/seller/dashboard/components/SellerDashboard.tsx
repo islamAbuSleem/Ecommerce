@@ -17,6 +17,7 @@ import { OrdersPanel } from "./OrdersPanel";
 import { PayoutBanner } from "./PayoutBanner";
 import { StockAlerts } from "./StockAlerts";
 import { StudioHeader } from "./StudioHeader";
+import { EarningsCard } from "./EarningsCard";
 
 const EMPTY_STATS: SellerStats = {
   gmv: 0,
@@ -148,13 +149,7 @@ export function SellerDashboard() {
               iconChip="bg-surface-container text-primary"
               caption="Sales value across your orders"
             />
-            <MetricCard
-              label="Net maker earnings"
-              value="Not yet"
-              icon="account_balance"
-              iconChip="bg-surface-container text-secondary"
-              caption="Aura does not deduct commission yet, so there is no net figure to show"
-            />
+        <EarningsCard />
             <MetricCard
               label="Orders"
               value={statsLoading ? "—" : String(stats.orderCount)}

@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { PrismaClient } from '../generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient({
   adapter: new PrismaPg({
@@ -10,7 +11,48 @@ const prisma = new PrismaClient({
 
 const img = (slug: string) => `https://picsum.photos/seed/${slug}/600/600`;
 
+const ADMIN_EMAIL = 'admin@example.com';
+const ADMIN_FULL_NAME = 'Store Admin';
+/**
+ * Development-only fallback so the review workflow is testable on a fresh
+ * checkout. `ADMIN_SEED_PASSWORD` overrides it. This value is intentionally
+ * obvious and is only ever written to a local/dev database.
+ */
+const DEFAULT_DEV_ADMIN_PASSWORD = 'dev-admin-not-for-production';
+
+async function seedAdmin() {
+  const password = process.env.ADMIN_SEED_PASSWORD;
+  if (!password) {
+    console.warn(
+      `[seed] ADMIN_SEED_PASSWORD is not set — seeding ${ADMIN_EMAIL} with a development-only password. Do not run this against a real environment.`,
+    );
+  }
+  const passwordHash = await bcrypt.hash(
+    password ?? DEFAULT_DEV_ADMIN_PASSWORD,
+    10,
+  );
+
+  // Upsert, like every other seed row: re-running never wipes and never
+  // downgrades an admin that was already created. The password hash IS
+  // refreshed so a dev admin with a lost or stale password can be recovered by
+  // re-seeding; admins are local-only fixtures and never real accounts.
+  return await prisma.user.upsert({
+    where: { email: ADMIN_EMAIL },
+    update: { fullName: ADMIN_FULL_NAME, role: 'admin', passwordHash },
+    create: {
+      email: ADMIN_EMAIL,
+      fullName: ADMIN_FULL_NAME,
+      passwordHash,
+      role: 'admin',
+    },
+  });
+}
+
 async function main() {
+  // Dev admin for the seller approval workflow (no sellerStatus — admins are
+  // not reviewed).
+  await seedAdmin();
+
   // Upsert seed sellers (never wipe users).
   const sellersData = [
     {

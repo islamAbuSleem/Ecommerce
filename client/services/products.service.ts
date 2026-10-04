@@ -25,11 +25,14 @@ export type ProductSort = "newest" | "price-asc" | "price-desc" | "rating";
 
 export type ListParams = {
   q?: string;
+  /** Comma-separated category names; the API matches any of them. */
   category?: string;
+  minPrice?: number;
   maxPrice?: number;
   minRating?: number;
   freeShipping?: boolean;
   verifiedSeller?: boolean;
+  inStock?: boolean;
   sort?: ProductSort;
   page?: number;
   limit?: number;

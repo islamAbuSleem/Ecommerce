@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useCart } from "@/components/cart/CartContext";
 import { useAuth } from "@/components/auth/AuthContext";
 import { ordersService } from "@/services/orders.service";
+import { paymentsService } from "@/services/payments.service";
 import { Icon } from "@/components/ui/components/Icon";
 import { DELIVERY_METHODS, formatPrice } from "./components/delivery-methods";
 import { CheckoutSteps } from "./components/CheckoutSteps";
@@ -99,6 +100,12 @@ export default function CheckoutPage() {
           setOrderId(order.id);
           setSubmitError(`Order ${order.id} placed but cart cleanup failed. Your cart was preserved — try clearing it again.`);
           return;
+        }
+        try {
+          const session = await paymentsService.checkout(order.id);
+          window.location.href = session.url;
+          return;
+        } catch {
         }
         setOrderId(order.id);
         setStep(2);

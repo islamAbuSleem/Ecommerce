@@ -25,6 +25,12 @@ model User {
   githubId     String?      @unique
   role         Role         @default(buyer)
   sellerStatus SellerStatus?
+  // Audit trail for the admin approval workflow. `sellerReviewedBy` stores the
+  // reviewing admin's user id (not a relation — an admin can be deleted without
+  // orphaning the history) and `sellerReviewedAt` is the decision timestamp.
+  sellerReviewedAt DateTime?
+  sellerReviewedBy String?
+  sellerReviewNote String?
   avatarUrl    String?
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
@@ -82,7 +88,11 @@ model Order {
   deliveryMethod String
   createdAt DateTime @default(now())
 
+  // Buyer-scoped order list (#5).
   @@index([userId, createdAt(sort: Desc)])
+  // The admin analytics window filters on createdAt alone, which the leading
+  // userId index cannot serve.
+  @@index([createdAt])
 }
 
 generator client {          // "which SDK to build from this schema, and where to put it"
