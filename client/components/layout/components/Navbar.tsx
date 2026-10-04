@@ -7,13 +7,13 @@ import { useCart } from "@/components/cart/CartContext";
 import { Icon } from "@/components/ui/components/Icon";
 
 const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/products", label: "Products" },
-  { href: "/search", label: "Search" },
-  { href: "/checkout", label: "Cart" },
-  { href: "/orders", label: "Orders" },
-  { href: "/seller/dashboard", label: "Dashboard" },
-  { href: "/profile", label: "Profile" },
+  { href: "/", label: "Home", auth: false },
+  { href: "/products", label: "Products", auth: false },
+  { href: "/search", label: "Search", auth: false },
+  { href: "/checkout", label: "Cart", auth: false },
+  { href: "/orders", label: "Orders", auth: true },
+  { href: "/seller/dashboard", label: "Dashboard", auth: true },
+  { href: "/profile", label: "Profile", auth: true },
 ];
 
 export function Navbar() {
@@ -32,30 +32,32 @@ export function Navbar() {
         </Link>
 
         <nav className="flex items-center gap-6">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`text-sm font-medium transition-colors ${
-                  isActive ? "text-accent" : "text-text-dark hover:text-text-primary"
-                }`}
-              >
-                <span className="inline-flex items-center gap-1.5">
-                  {item.label}
-                  {item.href === "/checkout" && count > 0 && (
-                    <span
-                      aria-label={`${count} items in cart`}
-                      className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-on-primary"
-                    >
-                      {count > 99 ? "99+" : count}
-                    </span>
-                  )}
-                </span>
-              </Link>
-            );
-          })}
+          {navItems
+            .filter((item) => (item.auth ? !!user : true))
+            .map((item) => {
+              const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`text-sm font-medium transition-colors ${
+                    isActive ? "text-accent" : "text-text-dark hover:text-text-primary"
+                  }`}
+                >
+                  <span className="inline-flex items-center gap-1.5">
+                    {item.label}
+                    {item.href === "/checkout" && count > 0 && (
+                      <span
+                        aria-label={`${count} items in cart`}
+                        className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-on-primary"
+                      >
+                        {count > 99 ? "99+" : count}
+                      </span>
+                    )}
+                  </span>
+                </Link>
+              );
+            })}
           {user ? (
             <span className="flex items-center gap-3">
               <span className="text-sm font-medium text-text-dark">{user.fullName || user.email}</span>

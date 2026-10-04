@@ -9,6 +9,7 @@ import { paymentsService } from "@/services/payments.service";
 import { Icon } from "@/components/ui/components/Icon";
 import { DELIVERY_METHODS, formatPrice } from "./components/delivery-methods";
 import { CheckoutSteps } from "./components/CheckoutSteps";
+import { CheckoutGuard } from "./guard";
 import { CartReview } from "./components/CartReview";
 import {
   ShippingForm,
@@ -52,6 +53,14 @@ function validateShipping(values: ShippingValues): ShippingErrors {
 }
 
 export default function CheckoutPage() {
+  return (
+    <CheckoutGuard>
+      <CheckoutPageInner />
+    </CheckoutGuard>
+  );
+}
+
+function CheckoutPageInner() {
   const { items, count, total: subtotal, loading: cartLoading, updateQty, remove, clear } = useCart();
   const { user, loading: authLoading } = useAuth();
   const [step, setStep] = useState(0);

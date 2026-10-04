@@ -9,7 +9,29 @@ const prisma = new PrismaClient({
   }),
 });
 
-const img = (slug: string) => `https://picsum.photos/seed/${slug}/600/600`;
+const img = (slug: string) => {
+  const map: Record<string, string> = {
+    'aria-headphones': 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop',
+    'pulse-speaker': 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&h=600&fit=crop',
+    'volt-dock': 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=600&h=600&fit=crop',
+    'ergo-stand': 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&h=600&fit=crop',
+    'lumen-lamp': 'https://images.unsplash.com/photo-1507473885765-e6ed057f492c?w=600&h=600&fit=crop',
+    'felt-pad': 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=600&h=600&fit=crop',
+    'stoneware-mugs': 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=600&h=600&fit=crop',
+    'woven-wall': 'https://images.unsplash.com/photo-1578500492678-6d75d8b6c6d1?w=600&h=600&fit=crop',
+    'beeswax-trio': 'https://images.unsplash.com/photo-1602028915047-37269d2a61f5?w=600&h=600&fit=crop',
+    'leather-wallet': 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=600&h=600&fit=crop',
+    'leather-organizer': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=600&fit=crop',
+    'leather-belt': 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop',
+    'oak-stool': 'https://images.unsplash.com/photo-1503607882651-9c6b37b1b4e5?w=600&h=600&fit=crop',
+    'walnut-board': 'https://images.unsplash.com/photo-1604941930269-1c8b79e3a9c7?w=600&h=600&fit=crop',
+    'cedar-planter': 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=600&h=600&fit=crop',
+    'brass-hoops': 'https://images.unsplash.com/photo-1630019852942-f89202989a59?w=600&h=600&fit=crop',
+    'signet-ring': 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&h=600&fit=crop',
+    'stone-pendant': 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&h=600&fit=crop',
+  };
+  return map[slug] ?? `https://picsum.photos/seed/${slug}/600/600`;
+};
 
 const ADMIN_EMAIL = 'admin@example.com';
 const ADMIN_FULL_NAME = 'Store Admin';
