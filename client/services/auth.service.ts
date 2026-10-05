@@ -6,6 +6,8 @@ export type AuthUser = {
   fullName: string | null;
   role: string;
   sellerStatus: string | null;
+  /** Present on GET /auth/me; login/register payloads omit it. */
+  createdAt?: string;
 };
 
 type SuccessResponse<T> = {
