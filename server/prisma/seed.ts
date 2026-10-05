@@ -23,7 +23,7 @@ const img = (slug: string) => {
     'leather-wallet': 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=600&h=600&fit=crop',
     'leather-organizer': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=600&fit=crop',
     'leather-belt': 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop',
-    'oak-stool': 'https://images.unsplash.com/photo-1503607882651-9c6b37b1b4e5?w=600&h=600&fit=crop',
+    'white-oak-stool': 'https://images.unsplash.com/photo-1503607882651-9c6b37b1b4e5?w=600&h=600&fit=crop',
     'walnut-board': 'https://images.unsplash.com/photo-1604941930269-1c8b79e3a9c7?w=600&h=600&fit=crop',
     'cedar-planter': 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=600&h=600&fit=crop',
     'brass-hoops': 'https://images.unsplash.com/photo-1630019852942-f89202989a59?w=600&h=600&fit=crop',
